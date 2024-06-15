@@ -8,6 +8,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DataUserController;
 use App\Http\Controllers\DataAsetController;
 use App\Http\Controllers\AsetUserController;
+use App\Http\Controllers\AsetKeluarController;
 use App\Http\Controllers\DataPeminjamanController;
 
 //Landing Page & Dashboard
@@ -46,6 +47,10 @@ Route::get('/aset_user', [AsetUserController::class, 'aset_user'])->name('aset_u
 
 //Data Peminjaman
 Route::get('/data_peminjaman', [DataPeminjamanController::class, 'data_peminjaman'])->name('data_peminjaman')->middleware('auth');
+
+//Data Aset Keluar
+Route::get('/aset_keluar', [AsetKeluarController::class, 'aset_keluar'])->name('aset_keluar')->middleware('auth');
+
 
 
 

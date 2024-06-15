@@ -120,7 +120,7 @@
 							</li>
 
 							<li class="nav-item">
-								<a data-toggle="collapse" href="">
+								<a href="{{ route('aset_keluar') }}">
 									<i class="fas fa-truck"></i>
 									<p>Data Aset Keluar</p>
 								</a>
