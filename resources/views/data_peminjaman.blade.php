@@ -1,7 +1,7 @@
 @extends('layout.layoutUser')
 
 @section('content')
-    
+
 <div class="main-panel">
     <div class="content">
         <div class="page-inner">
@@ -30,45 +30,48 @@
                     <h2>Informasi Peminjam</h2>
                     <div class="form-group">
                         <label for="namaPeminjam">Nama Lengkap</label>
-                        <input type="text" class="form-control input-square" id="namaPeminjam" placeholder="Ketik Nama Anda..">
+                        <input type="text" class="form-control" id="namaPeminjam" placeholder="Ketik Nama Anda..">
                     </div>
                     <div class="form-group">
                         <label for="instansi">Asal Instansi/Perusahaan</label>
-                        <input type="text" class="form-control input-square" id="instansi" placeholder="Ketik Asal Instansi Anda..">
+                        <input type="text" class="form-control" id="instansi" placeholder="Ketik Asal Instansi Anda..">
                     </div>
                     <div class="form-group">
                         <label for="no_hp">No Handphone</label>
-                        <input type="text" class="form-control input-pill" id="no_hp" placeholder="Masukkan No Handphone Anda">
+                        <input type="text" class="form-control" id="no_hp" placeholder="Masukkan No Handphone Anda">
                     </div>
-    
+
                     <hr> <!-- Garis Pembatas -->
 
                     <!-- Informasi Aset -->
                     <h2>Informasi Aset</h2>
+                    <div class="image-container" style="text-align: center; margin: 20px;">
+                        <img src="default-image.jpg" id="assetImage" alt="Asset Image">
+                    </div>
                     <div class="form-group">
                         <label for="squareSelect">Pilih Kategori</label>
-                        <select class="form-control input-square" id="squareSelect">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                        <select class="form-control" id="squareSelect">
+                            <option>Laptop</option>
+                            <option>Printer</option>
+                            <option>Proyektor</option>
+                            <option>Kamera</option>
+                            <option>Perangkat Lainnya</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="merk">Merk</label>
-                        <input type="text" class="form-control input-square" id="merk" placeholder="Ketik Nama Aset..">
+                        <input type="text" class="form-control" id="merk" placeholder="Ketik Merk Aset..">
                     </div>
 
                     <div class="form-group">
-                        <label for="squareSelect">Nama Aset</label>
-                        <select class="form-control input-square" id="squareSelect">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                        <label for="namaAset">Nama Aset</label>
+                        <select class="form-control" id="namaAset" onchange="changeImage(this.value)">
+                            <option value="image1">Nama Aset 1</option>
+                            <option value="image2">Nama Aset 2</option>
+                            <option value="image3">Nama Aset 3</option>
+                            <option value="image4">Nama Aset 4</option>
+                            <option value="image5">Nama Aset 5</option>
                         </select>
                     </div>
 
@@ -80,20 +83,19 @@
                                 <span class="input-group-text">Pcs</span>
                             </div>
                         </div>
-                    </div
-                </div>
-            
+                    </div>
+
                     <hr> <!-- Garis Pembatas -->
 
                     <!-- Detail Peminjaman -->
                     <h2>Detail Peminjaman</h2>
                     <div class="form-group">
                         <label for="tanggalPeminjaman">Tanggal Peminjaman</label>
-                        <input type="date" class="form-control input-square" id="tanggalPeminjaman">
+                        <input type="date" class="form-control" id="tanggalPeminjaman">
                     </div>
                     <div class="form-group">
                         <label for="tanggalPengembalian">Tanggal Pengembalian</label>
-                        <input type="date" class="form-control input-square" id="tanggalPengembalian">
+                        <input type="date" class="form-control" id="tanggalPengembalian">
                     </div>									
                 </div>
                 <div class="card-action">
@@ -104,5 +106,12 @@
         </div>
     </div>
 </div>
+
+<script>
+    function changeImage(imageValue) {
+        var imageUrl = imageValue + '.jpg .png';
+        document.getElementById('assetImage').src = imageUrl;
+    }
+</script>
 
 @endsection
