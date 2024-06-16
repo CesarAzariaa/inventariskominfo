@@ -41,22 +41,25 @@
                                             <th>Model</th>
                                             <th>Stok</th>
                                             <th>Status</th>
-                                            <th>Tanggal</th>
+                                            <th>Tanggal Keluar</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @php $no=1 @endphp
                                         @foreach ($data_aset as $row)
+                                           @if ($row->status == 'Rusak' || $row->status == 'Dipinjam')
                                            <tr>
-                                           <td>{{$no++}}</td>
-                                           <td>{{$row->nama_aset}}</td>
-                                           <td>{{$row->nama_kategori}}</td>
-                                           <td>{{$row->merk}}</td>
-                                           <td>{{$row->model}}</td>
-                                           <td>{{$row->stok}} Pcs </td>
-                                           <td>{{$row->status}}</td>
-                                           <td>{{$row->tanggal}}</td>
-                                        </tr>
+                                               <td>{{$no++}}</td>
+                                               <td>{{$row->nama_aset}}</td>
+                                               <td>{{$row->nama_kategori}}</td>
+                                               <td>{{$row->merk}}</td>
+                                               <td>{{$row->model}}</td>
+                                               <td>{{$row->stok}} Pcs </td>
+                                               <td>{{$row->status}}</td>
+                                               <td>{{$row->tanggal}}</td>
+                                           </tr>
+                                           @endif
                                         @endforeach
                                     </tbody>
                                 </table>

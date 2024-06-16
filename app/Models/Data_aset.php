@@ -12,8 +12,8 @@ class Data_Aset extends Model
     protected $table = 'data_asets';
 
     protected $fillable = [
-        'nama_aset',
         'kategori_id',
+        'nama_aset',
         'model',
         'merk',
         'serial_number',

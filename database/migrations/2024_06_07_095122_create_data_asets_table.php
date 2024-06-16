@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('status');
             $table->date('tanggal');
             $table->string('nama_file')->nullable();
-            $table->string('barcode');
+            $table->string('barcode')->nullable();
             $table->timestamps();
         });
     }

@@ -21,24 +21,28 @@ class DataAsetController extends Controller
 }
 
 
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'kategori_id'   => 'required',
-            'nama_aset'     => 'required',
-            'model'         => 'required',
-            'merk'          => 'required',
-            'serial_number' => 'required',
-            'stok'          => 'required',
-            'status'        => 'required',
-            'tanggal'       => 'required',
-            'barcode'       => 'required',
-        ]);
+public function store(Request $request)
+{
+    // Validasi data
+    $validatedData = $request->validate([
+        'nama_aset' => 'required',
+        'kategori_id' => 'required',
+        'model' => 'required',
+        'merk' => 'required',
+        'serial_number' => 'required',
+        'stok' => 'required|numeric',
+        'status' => 'required',
+        'tanggal' => 'required|date',
+    ]);
 
-        Data_Aset::create($validatedData);
+    // Simpan data ke dalam database
+    Data_Aset::create($validatedData);
 
-        return redirect('data_aset')->with('success', 'Data berhasil ditambahkan');
-    }
+    // Redirect ke halaman yang sesuai setelah penyimpanan berhasil
+    return redirect()->route('data_aset')->with('success', 'Data aset berhasil ditambahkan.');
+}
+
+
 
     public function update(Request $request, $id)
     {
@@ -51,7 +55,6 @@ class DataAsetController extends Controller
             'stok'          => 'required',
             'status'        => 'required',
             'tanggal'       => 'required',
-            'barcode'       => 'required',
         ]);
 
         Data_Aset::where('id', $id)->update($validatedData);
