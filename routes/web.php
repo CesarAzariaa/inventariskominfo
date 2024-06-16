@@ -40,7 +40,7 @@ Route::get('/kategori/destroy{id}', [KategoriController::class, 'destroy'])->nam
 Route::get('/data_aset', [DataAsetController::class, 'data_aset'])->name('data_aset')->middleware('auth');
 Route::post('/aset/store', [DataAsetController::class, 'store'])->name('aset.store')->middleware('auth');
 Route::post('/aset/update{id}', [DataAsetController::class, 'update'])->name('aset.update')->middleware('auth');
-Route::get('/aset/destroy{id}', [DataAsetController::class, 'destroy'])->name('aset.destroy')->middleware('auth');
+Route::delete('/aset/destroy{id}', [DataAsetController::class, 'destroy'])->name('aset.destroy')->middleware('auth');
 
 //Data Aset User
 Route::get('/aset_user', [AsetUserController::class, 'aset_user'])->name('aset_user')->middleware('auth');

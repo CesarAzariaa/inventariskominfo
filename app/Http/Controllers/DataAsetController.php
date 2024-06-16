@@ -23,7 +23,7 @@ class DataAsetController extends Controller
 
 public function store(Request $request)
 {
-    // Validasi data
+    // Validasi data termasuk validasi untuk file gambar
     $validatedData = $request->validate([
         'nama_aset' => 'required',
         'kategori_id' => 'required',
@@ -33,7 +33,20 @@ public function store(Request $request)
         'stok' => 'required|numeric',
         'status' => 'required',
         'tanggal' => 'required|date',
+        'nama_file' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // tambahkan validasi untuk gambar
     ]);
+
+    // Jika ada file gambar yang diupload
+    if ($request->hasFile('gambar')) {
+        // Mengambil file yang diupload
+        $image = $request->file('gambar');
+        // Generate nama unik untuk file gambar
+        $fileName = time().'.'.$image->getClientOriginalExtension();
+        // Simpan gambar ke dalam folder public/storage/users
+        $image->storeAs('public/gambar_aset', $fileName);
+        // Simpan nama file gambar ke dalam array data yang akan disimpan
+        $validatedData['nama_file'] = $fileName;
+    }
 
     // Simpan data ke dalam database
     Data_Aset::create($validatedData);
@@ -42,30 +55,44 @@ public function store(Request $request)
     return redirect()->route('data_aset')->with('success', 'Data aset berhasil ditambahkan.');
 }
 
+public function update(Request $request, $id)
+{
+    // Validasi data termasuk validasi untuk file gambar
+    $validatedData = $request->validate([
+        'kategori_id'   => 'required',
+        'nama_aset'     => 'required',
+        'model'         => 'required',
+        'merk'          => 'required',
+        'serial_number' => 'required',
+        'stok'          => 'required',
+        'status'        => 'required',
+        'tanggal'       => 'required',
+        'nama_file'        => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // tambahkan validasi untuk gambar
+    ]);
 
-
-    public function update(Request $request, $id)
-    {
-        $validatedData = $request->validate([
-            'kategori_id'   => 'required',
-            'nama_aset'     => 'required',
-            'model'         => 'required',
-            'merk'          => 'required',
-            'serial_number' => 'required',
-            'stok'          => 'required',
-            'status'        => 'required',
-            'tanggal'       => 'required',
-        ]);
-
-        Data_Aset::where('id', $id)->update($validatedData);
-
-        return redirect('data_aset')->with('success', 'Data berhasil diupdate');
+    // Jika ada file gambar yang diupload
+    if ($request->hasFile('gambar')) {
+        // Mengambil file yang diupload
+        $image = $request->file('gambar');
+        // Generate nama unik untuk file gambar
+        $fileName = time().'.'.$image->getClientOriginalExtension();
+        // Simpan gambar ke dalam folder public/storage/users
+        $image->storeAs('public/gambar_aset', $fileName);
+        // Simpan nama file gambar ke dalam array data yang akan diupdate
+        $validatedData['nama_file'] = $fileName;
     }
 
-    public function destroy($id)
-    {
-        Data_Aset::destroy($id);
+    // Update data berdasarkan ID
+    Data_Aset::where('id', $id)->update($validatedData);
 
-        return redirect('data_aset')->with('success', 'Data berhasil dihapus');
+    // Redirect ke halaman yang sesuai setelah penyimpanan berhasil
+    return redirect('data_aset')->with('success', 'Data berhasil diupdate');
+}
+
+public function destroy($id)
+    {
+    Data_Aset::destroy($id);
+    
+    return redirect('data_aset')->with('success', 'Data berhasil dihapus');
     }
 }

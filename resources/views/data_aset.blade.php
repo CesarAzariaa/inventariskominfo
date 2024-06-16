@@ -61,11 +61,77 @@
                                                 <td>{{$row->status}}</td>
                                                 <td>{{$row->tanggal}}</td>
                                                 <td>
-                                                    <a href="#modalView{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-info"><i class="fa fa-eye"></i>View</a>
+                                                    <a href="#modalView{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-info"><i class="fa fa-eye"></i> View</a>
                                                     <a href="#modalEdit{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
                                                     <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Hapus</a>
                                                 </td>
                                             </tr>
+
+                                            <!-- Modal View -->
+                                            <div class="modal fade" id="modalView{{$row->id}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header no-bd">
+                                                            <h3 class="modal-title">
+                                                                <span class="fw-mediumbold">Detail</span> 
+                                                                <span class="fw-mediumbold">Barang</span>
+                                                            </h3>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label>Nama Aset</label>
+                                                                <input type="text" class="form-control" value="{{$row->nama_aset}}" readonly>
+                                                            </div>
+                                            
+                                                            <div class="form-group">
+                                                                <label>Kategori</label>
+                                                                <input type="text" class="form-control" value="{{$row->nama_kategori}}" readonly>
+                                                            </div>
+                                            
+                                                            <div class="form-group">
+                                                                <label>Model</label>
+                                                                <input type="text" class="form-control" value="{{$row->model}}" readonly>
+                                                            </div>
+                                            
+                                                            <div class="form-group">
+                                                                <label>Merk</label>
+                                                                <input type="text" class="form-control" value="{{$row->merk}}" readonly>
+                                                            </div>
+                                            
+                                                            <div class="form-group">
+                                                                <label>Serial Number</label>
+                                                                <input type="text" class="form-control" value="{{$row->serial_number}}" readonly>
+                                                            </div>
+                                            
+                                                            <div class="form-group">
+                                                                <label>Stok</label>
+                                                                <input type="text" class="form-control" value="{{$row->stok}} Pcs" readonly>
+                                                            </div>
+                                            
+                                                            <div class="form-group">
+                                                                <label>Status</label>
+                                                                <input type="text" class="form-control" value="{{$row->status}}" readonly>
+                                                            </div>
+                                            
+                                                            <div class="form-group">
+                                                                <label>Tanggal</label>
+                                                                <input type="text" class="form-control" value="{{$row->tanggal}}" readonly>
+                                                            </div>
+                                            
+                                                            <div class="form-group">
+                                                                <label>QR Code</label><br>
+                                                                <img src="{{$row->qr_code}}" alt="QR Code" style="max-width: 100%; height: auto;">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -148,139 +214,141 @@
                         <label>Tanggal</label>
                         <input type="date" class="form-control" name="tanggal" placeholder="" required>
                     </div>
+
+                    <div class="form-group">
+                        <label>Gambar</label>
+                        <input type="file" class="form-control-file" name="gambar" accept="image/*">
+                        <small class="form-text text-muted">Pilih gambar untuk aset jika diperlukan.</small>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary"><i></i>Save Changes</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i></i>Undo</button>
+                    <button type="submit" class="btn btn-primary"><i></i>Simpan Perubahan</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i></i>Batal</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-                            @foreach ($data_aset as $d)
 
-                            <div class="modal fade" id="modalEdit{{ $d->id }}" tabindex="-1" role="dialog" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header no-bd">
-                                            <h3 class="modal-title">
-                                                <span class="fw-mediumbold">
-                                                Edit</span> 
-                                                <span class="fw-mediumbold">
-                                                    Barang
-                                                </span>
-                                            </h3>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <form method="POST" action="/aset/update{{ $d->id }}" enctype="multipart/form-data">
-                                            @csrf
-                                        <div class="modal-body">
-                                            
-                                            <div class="form-group">
-                                                <label>Nama Aset</label>
-                                                <input type="text" class="form-control" value="{{ $d->nama_aset }}" name="nama_aset" placeholder="" required>
-                                            </div>
+@foreach ($data_aset as $d)
+    <!-- Modal Edit -->
+    <div class="modal fade" id="modalEdit{{$d->id}}" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header no-bd">
+                    <h3 class="modal-title">
+                        <span class="fw-mediumbold">Edit</span> 
+                        <span class="fw-mediumbold">Barang</span>
+                    </h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="/aset/update/{{$d->id}}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Nama Aset</label>
+                            <input type="text" class="form-control" value="{{$d->nama_aset}}" name="nama_aset" placeholder="" required>
+                        </div>
     
-                                            <div class="form-group">
-                                                <label>Nama Kategori</label>
-                                                <select class="form-control" name="id.kategori" required>
-                                                <option value="{{ $d->id_kategori }}">{{ $d->nama_kategori }}</option>
-                                                @foreach ($data_kategori as $x)
-                                                <option value="{{ $x->id }}">{{ $x->nama_kategori }}</option>
-                                                @endforeach
-                                                </select>
-                                            </div>
+                        <div class="form-group">
+                            <label>Nama Kategori</label>
+                            <select class="form-control" name="kategori_id" required>
+                                <option value="{{$d->id_kategori}}">{{$d->nama_kategori}}</option>
+                                @foreach ($data_kategori as $x)
+                                <option value="{{ $x->id }}">{{ $x->nama_kategori }}</option>
+                                @endforeach
+                            </select>
+                        </div>
     
-                                            <div class="form-group">
-                                                <label>Model</label>
-                                                <input type="text" class="form-control" value="{{ $d->model }}" name="model" placeholder="" required>
-                                            </div>
+                        <div class="form-group">
+                            <label>Model</label>
+                            <input type="text" class="form-control" value="{{$d->model}}" name="model" placeholder="" required>
+                        </div>
     
-                                            <div class="form-group">
-                                                <label>Merk</label>
-                                                <input type="text" class="form-control" value="{{ $d->merk }}" name="merk" placeholder="" required>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label>S/N</label>
-                                                <input type="text" class="form-control" value="{{ $d->serial_number }}" name="serial_number" placeholder="" required>
-                                            </div>
+                        <div class="form-group">
+                            <label>Merk</label>
+                            <input type="text" class="form-control" value="{{$d->merk}}" name="merk" placeholder="" required>
+                        </div>
     
-                                            <div class="form-group">
-                                                <label>Stok</label>
-                                                <div class="input-group">
-                                                    <input type="number" class="form-control" value="{{ $d->stok }}" name="stok" placeholder="" required>
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text">Pcs</span>
-                                                    </div>
-                                                </div>
-                                            </div>
+                        <div class="form-group">
+                            <label>S/N</label>
+                            <input type="text" class="form-control" value="{{$d->serial_number}}" name="serial_number" placeholder="" required>
+                        </div>
     
-                                            <div class="form-group">
-                                                <label>Status</label>
-                                                <select class="form-control" value="{{ $d->status }}" name="status" required>
-                                                    <option value="">Pilih Status</option>
-                                                    <option value="Tersedia">Tersedia</option>
-                                                    <option value="Terpakai">Terpakai</option>
-                                                    <option value="Rusak">Rusak</option>
-                                                    <option value="Dipinjam">Dipinjam</option>
-                                                </select>
-                                            </div>
-    
-                                            <div class="form-group">
-                                                <label>Tanggal</label>
-                                                <input type="date" class="form-control" value="{{ $d->tanggal }}" name="tanggal" placeholder="" required>
-                                            </div>
-
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary"><i></i>Save Changes</button>
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i></i>Undo</button>
-                                        </div>
-                                        </form>
-                                    </div>
+                        <div class="form-group">
+                            <label>Stok</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" value="{{$d->stok}}" name="stok" placeholder="" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Pcs</span>
                                 </div>
                             </div>
-            @endforeach
+                        </div>
+    
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" name="status" required>
+                                <option value="{{$d->status}}">{{$d->status}}</option>
+                                <option value="Tersedia">Tersedia</option>
+                                <option value="Terpakai">Terpakai</option>
+                                <option value="Rusak">Rusak</option>
+                                <option value="Dipinjam">Dipinjam</option>
+                            </select>
+                        </div>
+    
+                        <div class="form-group">
+                            <label>Tanggal</label>
+                            <input type="date" class="form-control" value="{{$d->tanggal}}" name="tanggal" placeholder="" required>
+                        </div>
+    
+                        <div class="form-group">
+                            <label>Gambar</label>
+                            <input type="file" class="form-control-file" name="gambar" accept="image/*">
+                            <small class="form-text text-muted">Pilih gambar untuk aset jika ingin mengganti gambar yang sudah ada.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary"><i></i>Simpan Perubahan</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i></i>Batal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
 
-            @foreach ($data_aset as $d)
-
-                            <div class="modal fade" id="modalHapus{{ $d->id }}" tabindex="-1" role="dialog" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header no-bd">
-                                            <h3 class="modal-title">
-                                                <span class="fw-mediumbold">
-                                                Hapus</span> 
-                                                <span class="fw-mediumbold">
-                                                    Barang
-                                                </span>
-                                            </h3>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <form method="GET" action="/aset/destroy{{ $d->id }}" enctype="multipart/form-data">
-                                            @csrf
-                                        <div class="modal-body">
-                                            
-                                        <div class="form-group">
-                                            <h4 style="text-align: center;">Apakah Anda Ingin Mengapus Data Ini?</h4>
-                                        </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-danger"><i></i>Hapus</button>
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i></i>Close</button>
-                                        </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+    <!-- Modal Hapus -->
+    <div class="modal fade" id="modalHapus{{$d->id}}" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header no-bd">
+                    <h3 class="modal-title">
+                        <span class="fw-mediumbold">Hapus</span> 
+                        <span class="fw-mediumbold">Barang</span>
+                    </h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="{{ route('aset.destroy', ['id' => $d->id]) }}">
+                    @csrf
+                    @method('DELETE') <!-- Menambahkan metode DELETE -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <h4 style="text-align: center;">Apakah Anda Ingin Menghapus Data Ini?</h4>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger"><i></i>Hapus</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i></i>Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>    
 @endforeach
 
 @endsection
-
-
