@@ -81,7 +81,9 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <div class="form-group">
+                                                            <div style="display: flex; justify-content: center;">
+                                                                <img src="{{ asset('storage/gambar_aset/' . $row->nama_file) }}" alt="Gambar Barang" style="max-width: 100%; height: auto;">
+                                                            </div>                                                            
                                                                 <label>Nama Aset</label>
                                                                 <input type="text" class="form-control" value="{{$row->nama_aset}}" readonly>
                                                             </div>
@@ -123,11 +125,11 @@
                                             
                                                             <div class="form-group">
                                                                 <label>QR Code</label><br>
-                                                                <img src="{{$row->qr_code}}" alt="QR Code" style="max-width: 100%; height: auto;">
+                                                                <img src="{{ asset($row->barcode) }}" alt="QR Code">
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="button" class="close" data-dismiss="modal">Close</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -217,8 +219,7 @@
 
                     <div class="form-group">
                         <label>Gambar</label>
-                        <input type="file" class="form-control-file" name="gambar" accept="image/*">
-                        <small class="form-text text-muted">Pilih gambar untuk aset jika diperlukan.</small>
+                        <input type="file" class="form-control-file" name="nama_file" accept="image/*">
                     </div>
                 </div>
                 <div class="modal-footer">

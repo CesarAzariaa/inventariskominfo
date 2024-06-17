@@ -21,7 +21,7 @@ class Data_Aset extends Model
         'status',
         'tanggal',
         'nama_file',
-        'barcode'
+        'barcode',
     ];
 
     public function kategori()
