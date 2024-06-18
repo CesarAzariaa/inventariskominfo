@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Data_Aset; 
+use App\Models\Data_aset; 
 use App\Models\Kategori; 
 use Illuminate\Support\Facades\Storage;
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\LabelAlignment;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Color\Color;
+use BaconQrCode\Writer;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 
 class DataAsetController extends Controller
 {
@@ -35,7 +33,7 @@ public function store(Request $request)
         'kategori_id' => 'required',
         'model' => 'required',
         'merk' => 'required',
-        'serial_number' => 'required',
+        'serial_number' => 'required|unique:data_asets',
         'stok' => 'required|numeric',
         'status' => 'required',
         'tanggal' => 'required|date',
@@ -54,22 +52,20 @@ public function store(Request $request)
 
     $data_aset = Data_Aset::create($validatedData);
 
-    // Membuat QR Code
-    $qrCode = new QrCode($data_aset->id);
-    $qrCode->setSize(300);
-    $qrCode->setEncoding(new Encoding('UTF-8'));
-    $qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::Low);
-    $qrCode->setForegroundColor(new Color(0, 0, 0));
-    $qrCode->setBackgroundColor(new Color(255, 255, 255));
+    // Membuat QR Code dengan BaconQrCode
+    $renderer = new ImageRenderer(
+        new RendererStyle(300),
+        new SvgImageBackEnd()
+    );
+    $writer = new Writer($renderer);
+    $outputPath = 'qr_codes/' . $data_aset->id . '.svg';
+    if (!Storage::disk('public')->exists('qr_codes/')) {
+        Storage::disk('public')->makeDirectory('qr_codes/');
+    }
+    $data = $writer->writeString($data_aset->id);
+    Storage::disk('public')->put($outputPath, $data);
 
-    $writer = new PngWriter();
-    $result = $writer->write($qrCode);
-
-    // Menyimpan QR Code sebagai file
-    $outputPath = 'storage/qr_codes/' . $data_aset->id . '.png';
-    $result->saveToFile(public_path($outputPath));
-
-    $data_aset->barcode = $outputPath; // Mengubah 'qr_code_path' menjadi 'barcode'
+    $data_aset->barcode = $outputPath;
     $data_aset->save();
 
     return redirect()->route('data_aset')->with('success', 'Data aset berhasil ditambahkan.');

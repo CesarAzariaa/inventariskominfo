@@ -125,9 +125,13 @@
                                             
                                                             <div class="form-group">
                                                                 <label>QR Code</label><br>
-                                                                <img src="{{ asset($row->barcode) }}" alt="QR Code">
-                                                            </div>
+                                                                @if ($row->barcode)
+                                                                    <img src="{{ asset('storage/' . $row->barcode) }}" alt="QR Code">
+                                                                @else
+                                                                <p>QR Code tidak tersedia.</p>
+                                                            @endif
                                                         </div>
+                                                    </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="close" data-dismiss="modal">Close</button>
                                                         </div>
