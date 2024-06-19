@@ -28,47 +28,50 @@ class DataAsetController extends Controller
 
 public function store(Request $request)
 {
-    $validatedData = $request->validate([
-        'nama_aset' => 'required',
-        'kategori_id' => 'required',
-        'model' => 'required',
-        'merk' => 'required',
-        'serial_number' => 'required|unique:data_asets',
-        'stok' => 'required|numeric',
-        'status' => 'required',
-        'tanggal' => 'required|date',
-        'nama_file' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        'barcode' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-    ]);
+    try {
+        $validatedData = $request->validate([
+            'nama_aset' => 'required',
+            'kategori_id' => 'required',
+            'model' => 'required',
+            'merk' => 'required',
+            'stok' => 'required|numeric',
+            'status' => 'required',
+            'tanggal' => 'required|date',
+            'nama_file' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'barcode' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
 
-    if ($request->hasFile('nama_file')) {
-        $photo = $request->file('nama_file');
-        $nama_gambar = date('Y-m-d').$photo->getClientOriginalName();
-        $path = 'gambar_aset/'.$nama_gambar;
+        if ($request->hasFile('nama_file')) {
+            $photo = $request->file('nama_file');
+            $nama_gambar = date('Y-m-d').$photo->getClientOriginalName();
+            $path = 'gambar_aset/'.$nama_gambar;
 
-        Storage::disk('public')->put($path, file_get_contents($photo));
-        $validatedData['nama_file'] = $nama_gambar; // Menyimpan nama file yang telah diubah ke dalam array
+            Storage::disk('public')->put($path, file_get_contents($photo));
+            $validatedData['nama_file'] = $nama_gambar; // Menyimpan nama file yang telah diubah ke dalam array
+        }
+
+        $data_aset = Data_Aset::create($validatedData);
+
+        // Membuat QR Code dengan BaconQrCode
+        $renderer = new ImageRenderer(
+            new RendererStyle(300),
+            new SvgImageBackEnd()
+        );
+        $writer = new Writer($renderer);
+        $outputPath = 'qr_codes/' . $data_aset->id . '.svg';
+        if (!Storage::disk('public')->exists('qr_codes/')) {
+            Storage::disk('public')->makeDirectory('qr_codes/');
+        }
+        $data = $writer->writeString($data_aset->id);
+        Storage::disk('public')->put($outputPath, $data);
+
+        $data_aset->barcode = $outputPath;
+        $data_aset->save();
+
+        return redirect()->route('data_aset')->with('success', 'Data aset berhasil ditambahkan.');
+    } catch (\Exception $e) {
+        return redirect()->route('data_aset')->with('error', 'Gagal menambahkan data aset: ' . $e->getMessage());
     }
-
-    $data_aset = Data_Aset::create($validatedData);
-
-    // Membuat QR Code dengan BaconQrCode
-    $renderer = new ImageRenderer(
-        new RendererStyle(300),
-        new SvgImageBackEnd()
-    );
-    $writer = new Writer($renderer);
-    $outputPath = 'qr_codes/' . $data_aset->id . '.svg';
-    if (!Storage::disk('public')->exists('qr_codes/')) {
-        Storage::disk('public')->makeDirectory('qr_codes/');
-    }
-    $data = $writer->writeString($data_aset->id);
-    Storage::disk('public')->put($outputPath, $data);
-
-    $data_aset->barcode = $outputPath;
-    $data_aset->save();
-
-    return redirect()->route('data_aset')->with('success', 'Data aset berhasil ditambahkan.');
 }
 
 public function update(Request $request, $id)
@@ -78,22 +81,34 @@ public function update(Request $request, $id)
         'nama_aset'     => 'required',
         'model'         => 'required',
         'merk'          => 'required',
-        'serial_number' => 'required',
-        'stok'          => 'required',
+        'stok'          => 'required|numeric',
         'status'        => 'required',
-        'tanggal'       => 'required',
-        'nama_file'     => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        'tanggal'       => 'required|date',
+        'nama_file'     => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
     ]);
 
+    $dataAset = Data_Aset::findOrFail($id);
+
     if ($request->hasFile('nama_file')) {
+        // Hapus file lama jika ada
+        $oldFileName = $dataAset->nama_file;
+        if ($oldFileName && Storage::disk('public')->exists("gambar_aset/$oldFileName")) {
+            Storage::disk('public')->delete("gambar_aset/$oldFileName");
+        }
+
+        // Simpan file baru
         $image = $request->file('nama_file');
-        $fileName = time().'.'.$image->getClientOriginalExtension();
+        $fileName = time() . '.' . $image->getClientOriginalExtension();
         $image->storeAs('public/gambar_aset', $fileName);
-        $validatedData['nama_file'] = $fileName; // Menyimpan nama file yang telah diubah ke dalam array
+        $validatedData['nama_file'] = $fileName;
     }
 
-    Data_Aset::where('id', $id)->update($validatedData);
-    return redirect('data_aset')->with('success', 'Data berhasil diupdate');
+    try {
+        $dataAset->update($validatedData);
+        return redirect('data_aset')->with('success', 'Data berhasil diupdate');
+    } catch (\Exception $e) {
+        return back()->with('error', 'Gagal mengupdate data: ' . $e->getMessage());
+    }
 }
 
 public function destroy($id)

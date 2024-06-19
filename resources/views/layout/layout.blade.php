@@ -203,6 +203,16 @@
 				});
 			</script>
 		@endif
+		@if(session('error'))
+		<script>
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: '{{ session('error') }}',
+				footer: '<a href>Why do I have this issue?</a>'
+			});
+		</script>
+		@endif
 			</body>
 		</html>
 	</html>

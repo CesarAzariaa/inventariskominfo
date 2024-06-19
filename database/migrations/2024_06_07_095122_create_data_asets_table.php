@@ -15,11 +15,10 @@ return new class extends Migration
             $table->string('nama_aset');
             $table->string('model');
             $table->string('merk');
-            $table->string('serial_number');
             $table->integer('stok');
             $table->string('status');
             $table->date('tanggal');
-            $table->string('nama_file')->nullable();
+            $table->string('nama_file');
             $table->string('barcode')->nullable();
             $table->timestamps();
         });

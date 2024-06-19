@@ -102,12 +102,7 @@
                                                                 <label>Merk</label>
                                                                 <input type="text" class="form-control" value="{{$row->merk}}" readonly>
                                                             </div>
-                                            
-                                                            <div class="form-group">
-                                                                <label>Serial Number</label>
-                                                                <input type="text" class="form-control" value="{{$row->serial_number}}" readonly>
-                                                            </div>
-                                            
+
                                                             <div class="form-group">
                                                                 <label>Stok</label>
                                                                 <input type="text" class="form-control" value="{{$row->stok}} Pcs" readonly>
@@ -191,11 +186,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label>S/N</label>
-                        <input type="text" class="form-control" name="serial_number" placeholder="" required>
-                    </div>
-
-                    <div class="form-group">
                         <label>Stok</label>
                         <div class="input-group">
                             <input type="number" class="form-control" name="stok" placeholder="" required>
@@ -252,6 +242,7 @@
                 </div>
                 <form method="POST" action="/aset/update/{{$d->id}}" enctype="multipart/form-data">
                     @csrf
+                    @method('PUT')
                     <div class="modal-body">
                         <div class="form-group">
                             <label>Nama Aset</label>
@@ -277,12 +268,7 @@
                             <label>Merk</label>
                             <input type="text" class="form-control" value="{{$d->merk}}" name="merk" placeholder="" required>
                         </div>
-    
-                        <div class="form-group">
-                            <label>S/N</label>
-                            <input type="text" class="form-control" value="{{$d->serial_number}}" name="serial_number" placeholder="" required>
-                        </div>
-    
+                            
                         <div class="form-group">
                             <label>Stok</label>
                             <div class="input-group">
@@ -340,7 +326,7 @@
                 </div>
                 <form method="POST" action="{{ route('aset.destroy', ['id' => $d->id]) }}">
                     @csrf
-                    @method('DELETE') <!-- Menambahkan metode DELETE -->
+                    @method('DELETE')
                     <div class="modal-body">
                         <div class="form-group">
                             <h4 style="text-align: center;">Apakah Anda Ingin Menghapus Data Ini?</h4>
