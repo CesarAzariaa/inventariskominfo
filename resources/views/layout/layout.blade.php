@@ -51,8 +51,8 @@
 			<!-- Navbar Header -->
 			<nav class="navbar navbar-header navbar-expand-lg">   
 				<div style="text-align: center;">
-					<font color="white" alt="navbar-brand" class="navbar-brand">Dinas Komunikasi Informatika dan Statistik</font>
-				</div>
+					<font color="white" alt="navbar-brand" class="navbar-brand" style="font-weight: bold;">Dinas Komunikasi Informatika dan Statistik</font>
+				</div>				
 			</nav>
 			<!-- End Navbar -->
 		</div>

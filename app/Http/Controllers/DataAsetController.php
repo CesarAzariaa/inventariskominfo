@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Data_aset; 
 use App\Models\Kategori; 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use BaconQrCode\Writer;
 use BaconQrCode\Renderer\ImageRenderer;
@@ -15,7 +16,7 @@ class DataAsetController extends Controller
 {
     public function data_aset()
 {
-    $data_aset = Data_Aset::join('kategoris', 'data_asets.kategori_id', '=', 'kategoris.id')
+    $data_aset = Data_aset::join('kategoris', 'data_asets.kategori_id', '=', 'kategoris.id')
                   ->select('data_asets.*', 'kategoris.nama_kategori as nama_kategori')
                   ->get();
     $data = array(
@@ -50,7 +51,7 @@ public function store(Request $request)
             $validatedData['nama_file'] = $nama_gambar; // Menyimpan nama file yang telah diubah ke dalam array
         }
 
-        $data_aset = Data_Aset::create($validatedData);
+        $data_aset = Data_aset::create($validatedData);
 
         // Membuat QR Code dengan BaconQrCode
         $renderer = new ImageRenderer(
@@ -76,44 +77,51 @@ public function store(Request $request)
 
 public function update(Request $request, $id)
 {
+    $data_aset = Data_aset::findOrFail($id); // Memastikan data aset ditemukan atau mengembalikan error 404
+
+    // Validasi input termasuk file gambar
     $validatedData = $request->validate([
-        'kategori_id'   => 'required',
-        'nama_aset'     => 'required',
-        'model'         => 'required',
-        'merk'          => 'required',
-        'stok'          => 'required|numeric',
-        'status'        => 'required',
-        'tanggal'       => 'required|date',
-        'nama_file'     => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
+        'nama_aset' => 'required',
+        'kategori_id' => 'required',
+        'model' => 'required',
+        'merk' => 'required',
+        'stok' => 'required|numeric',
+        'status' => 'required',
+        'tanggal' => 'required|date',
+        'nama_file' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048', // 'sometimes' karena file mungkin tidak selalu diupdate
     ]);
 
-    $dataAset = Data_Aset::findOrFail($id);
+    $input = $validatedData; // Gunakan data yang telah divalidasi
 
     if ($request->hasFile('nama_file')) {
-        // Hapus file lama jika ada
-        $oldFileName = $dataAset->nama_file;
-        if ($oldFileName && Storage::disk('public')->exists("gambar_aset/$oldFileName")) {
-            Storage::disk('public')->delete("gambar_aset/$oldFileName");
+        // Hapus gambar lama jika ada
+        if ($data_aset->nama_file) {
+            $oldPath = 'gambar_aset/' . $data_aset->nama_file;
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
+            }
         }
 
-        // Simpan file baru
-        $image = $request->file('nama_file');
-        $fileName = time() . '.' . $image->getClientOriginalExtension();
-        $image->storeAs('public/gambar_aset', $fileName);
-        $validatedData['nama_file'] = $fileName;
+        $photo = $request->file('nama_file');
+        $nama_gambar = date('Y-m-d-His') . '-' . $photo->getClientOriginalName(); // Menambahkan timestamp lebih detail
+        $path = 'gambar_aset/' . $nama_gambar;
+
+        // Simpan gambar baru ke dalam storage
+        Storage::disk('public')->put($path, file_get_contents($photo));
+
+        // Simpan nama file yang baru diupdate ke dalam input
+        $input['nama_file'] = $nama_gambar;
     }
 
-    try {
-        $dataAset->update($validatedData);
-        return redirect('data_aset')->with('success', 'Data berhasil diupdate');
-    } catch (\Exception $e) {
-        return back()->with('error', 'Gagal mengupdate data: ' . $e->getMessage());
-    }
+    // Proses update data
+    $data_aset->update($input);
+
+    return redirect()->route('data_aset')->with('success', 'Data berhasil diperbarui');
 }
 
 public function destroy($id)
     {
-    Data_Aset::destroy($id);
+    Data_aset::destroy($id);
     
     return redirect('data_aset')->with('success', 'Data berhasil dihapus');
     }

@@ -240,7 +240,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form method="POST" action="/aset/update/{{$d->id}}" enctype="multipart/form-data">
+                <form action="/aset/update/{{$d->id}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
@@ -252,9 +252,9 @@
                         <div class="form-group">
                             <label>Nama Kategori</label>
                             <select class="form-control" name="kategori_id" required>
-                                <option value="{{$d->id_kategori}}">{{$d->nama_kategori}}</option>
+                                <!-- Tampilkan semua kategori dan tandai yang sebelumnya dipilih -->
                                 @foreach ($data_kategori as $x)
-                                <option value="{{ $x->id }}">{{ $x->nama_kategori }}</option>
+                                    <option value="{{ $x->id }}" {{ $d->id_kategori == $x->id ? 'selected' : '' }}>{{ $x->nama_kategori }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -282,7 +282,7 @@
                         <div class="form-group">
                             <label>Status</label>
                             <select class="form-control" name="status" required>
-                                <option value="{{$d->status}}">{{$d->status}}</option>
+                                <option value="{{$d->status}}" selected>{{$d->status}}</option>
                                 <option value="Tersedia">Tersedia</option>
                                 <option value="Terpakai">Terpakai</option>
                                 <option value="Rusak">Rusak</option>
@@ -296,8 +296,10 @@
                         </div>
     
                         <div class="form-group">
-                            <label>Gambar</label>
-                            <input type="file" class="form-control-file" name="gambar" accept="image/*">
+                            @if ($d->nama_file)
+                               <img src="{{ asset('storage/gambar_aset/' . $d->nama_file) }}" alt="Gambar Barang" style="max-width: 100%; height: auto;">
+                            @endif
+                            <input type="file" class="form-control-file" name="nama_file" accept="image/*">
                             <small class="form-text text-muted">Pilih gambar untuk aset jika ingin mengganti gambar yang sudah ada.</small>
                         </div>
                     </div>

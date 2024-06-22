@@ -30,11 +30,9 @@
 		<div class="main-header" data-background-color="blue">
 			<!-- Logo Header -->
 			<div class="logo-header">
-				
 				<a href="#" class="logo">
 					<img src="assets/img/kominfo.png" alt="navbar brand" class="navbar-brand" width="65" height="auto">
-				</a>
-								
+				</a>		
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon">
 						<i class="fa fa-bars"></i>
@@ -187,7 +185,7 @@
 										<div class="col col-stats ml-3 ml-sm-0">
 											<div class="numbers">
 												<p class="card-category">Data User</p>
-												<h4 class="card-title">1,294</h4>
+												<h4 class="card-title">{{ is_countable($data_user) ? count($data_user) : '0' }}</h4>
 											</div>
 										</div>
 									</div>
@@ -206,7 +204,7 @@
 										<div class="col col-stats ml-3 ml-sm-0">
 											<div class="numbers">
 												<p class="card-category">Data Aset</p>
-												<h4 class="card-title">1,374</h4>
+												<h4 class="card-title">{{ is_countable($data_aset) ? count($data_aset) : '0' }}</h4>
 											</div>
 										</div>
 									</div>
@@ -261,105 +259,75 @@
 						</div>
 					  </div>
 					  <script>
-						// Data barang masuk dan barang keluar untuk bulan Januari sampai Desember
-						// Array dataBarangMasuk dan dataBarangKeluar yang baru
-                       var dataBarangMasukNormalized = [];
-                       var dataBarangKeluarNormalized = [];
+    // Mengambil data aset dari backend (Laravel)
+    @php
+    $data_aset_tersedia_terpakai = \App\Models\Data_aset::whereIn('status', ['tersedia', 'terpakai'])->get();
+    $data_aset_dipinjam_rusak = \App\Models\Data_aset::whereIn('status', ['dipinjam', 'rusak'])->get();
+    @endphp
 
-                        // Cari nilai maksimum di antara kedua array
-                       var maxInput = Math.max(...dataBarangMasuk);
-                       var maxOutput = Math.max(...dataBarangKeluar);
+    // Menghitung jumlah aset masuk dan keluar berdasarkan bulan
+    var dataAsetMasuk = @json($data_aset_tersedia_terpakai->countBy('bulan'));
+    var dataAsetKeluar = @json($data_aset_dipinjam_rusak->countBy('bulan'));
 
-                        // Hitung faktor normalisasi
-                       var normalizationFactor = 50 / Math.max(maxInput, maxOutput);
+    // Array untuk label bulan
+    var bulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
-                        // Normalisasi kedua array
-                        dataBarangMasukNormalized = dataBarangMasuk.map(value => Math.round(value * normalizationFactor));
-						dataBarangKeluarNormalized = dataBarangKeluar.map(value => Math.round(value * normalizationFactor));
+    // Menggambar grafik batang (bar chart)
+    var ctxBar = document.getElementById('barChart').getContext('2d');
+    var barChart = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: bulan,
+            datasets: [{
+                label: 'Aset Masuk',
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+                data: Object.values(dataAsetMasuk)
+            }, {
+                label: 'Aset Keluar',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+                data: Object.values(dataAsetKeluar)
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
 
-                        // Output hasil normalisasi
-                        console.log("Data Barang Masuk yang Dinormalisasi: ", dataBarangMasukNormalized);
-                        console.log("Data Barang Keluar yang Dinormalisasi: ", dataBarangKeluarNormalized);
+    // Menghitung total aset masuk dan keluar
+    var totalAsetMasuk = Object.values(dataAsetMasuk).reduce((a, b) => a + b, 0);
+    var totalAsetKeluar = Object.values(dataAsetKeluar).reduce((a, b) => a + b, 0);
 
-					
-						// Menggambar chart
-						var ctx = document.getElementById('barChart').getContext('2d');
-						var barChart = new Chart(ctx, {
-						  type: 'bar',
-						  data: {
-							labels: bulan,
-							datasets: [{
-							  label: 'Aset Masuk',
-							  backgroundColor: 'rgba(54, 162, 235, 0.5)',
-							  borderColor: 'rgba(54, 162, 235, 1)',
-							  borderWidth: 1,
-							  data: dataBarangMasuk
-							}, {
-							  label: 'Aset Keluar',
-							  backgroundColor: 'rgba(255, 99, 132, 0.5)',
-							  borderColor: 'rgba(255, 99, 132, 1)',
-							  borderWidth: 1,
-							  data: dataBarangKeluar
-							}]
-						  },
-						  options: {
-							scales: {
-							  yAxes: [{
-								ticks: {
-								  beginAtZero: true
-								}
-							  }]
-							}
-						  }
-						});
-					  </script>
-					  
-					  <script>
-						// Data barang masuk dan barang keluar untuk bulan Januari sampai Desember
-						// Array dataBarangMasuk dan dataBarangKeluar yang baru
-						var dataBarangMasukNormalized = [];
-						var dataBarangKeluarNormalized = [];
-					
-						// Cari nilai maksimum di antara kedua array
-						var maxInput = Math.max(...dataBarangMasuk);
-						var maxOutput = Math.max(...dataBarangKeluar);
-					
-						// Hitung faktor normalisasi
-						var normalizationFactor = 50 / Math.max(maxInput, maxOutput);
-					
-						// Normalisasi kedua array
-						dataBarangMasukNormalized = dataBarangMasuk.map(value => Math.round(value * normalizationFactor));
-						dataBarangKeluarNormalized = dataBarangKeluar.map(value => Math.round(value * normalizationFactor));
-					
-						// Output hasil normalisasi
-						console.log("Data Barang Masuk yang Dinormalisasi: ", dataBarangMasukNormalized);
-						console.log("Data Barang Keluar yang Dinormalisasi: ", dataBarangKeluarNormalized);
-					
-						// Menggambar chart
-						var ctx = document.getElementById('pieChart').getContext('2d');
-						var pieChart = new Chart(ctx, {
-						  type: 'pie',
-						  data: {
-							labels: ['Aset Masuk', 'Aset Keluar'],
-							datasets: [{
-							  label: 'Persentase',
-							  backgroundColor: ['rgba(54, 162, 235, 0.5)', 'rgba(255, 99, 132, 0.5)'],
-							  borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
-							  borderWidth: 1,
-							  data: [dataBarangMasukNormalized.reduce((a, b) => a + b, 0), dataBarangKeluarNormalized.reduce((a, b) => a + b, 0)]
-							}]
-						  },
-						  options: {
-							scales: {
-							  yAxes: [{
-								ticks: {
-								  beginAtZero: true
-								}
-							  }]
-							}
-						  }
-						});
-					  </script>
+    // Menggambar grafik lingkaran (pie chart)
+    var ctxPie = document.getElementById('pieChart').getContext('2d');
+    var pieChart = new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+            labels: ['Aset Masuk', 'Aset Keluar'],
+            datasets: [{
+                label: 'Persentase',
+                backgroundColor: ['rgba(54, 162, 235, 0.5)', 'rgba(255, 99, 132, 0.5)'],
+                borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
+                borderWidth: 1,
+                data: [totalAsetMasuk, totalAsetKeluar]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+</script>
+
 					
 									</div>
 								</div>

@@ -48,7 +48,7 @@
                                         @foreach ($data_aset as $row)
                                            <tr>
                                            <td>{{$no++}}</td>
-                                           <td>{{$row->nama_kategori}}</td>
+                                           <td>{{$row->kategori->nama_kategori}}</td>
                                            <td>{{$row->nama_aset}}</td>
                                            <td>{{$row->merk}}</td>
                                            <td>{{$row->model}}</td>
