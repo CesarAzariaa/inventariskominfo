@@ -258,38 +258,32 @@
 						  </div>
 						</div>
 					  </div>
-					  <script>
-    // Mengambil data aset dari backend (Laravel)
-    @php
-    $data_aset_tersedia_terpakai = \App\Models\Data_aset::whereIn('status', ['tersedia', 'terpakai'])->get();
-    $data_aset_dipinjam_rusak = \App\Models\Data_aset::whereIn('status', ['dipinjam', 'rusak'])->get();
-    @endphp
+	<script>
+    var dataAsetMasuk = @json($dataAsetMasuk);
+    var dataAsetKeluar = @json($dataAsetKeluar);
+    var tanggal = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
-    // Menghitung jumlah aset masuk dan keluar berdasarkan bulan
-    var dataAsetMasuk = @json($data_aset_tersedia_terpakai->countBy('bulan'));
-    var dataAsetKeluar = @json($data_aset_dipinjam_rusak->countBy('bulan'));
+    // Mengisi data untuk chart
+    var dataMasuk = tanggal.map(month => dataAsetMasuk[month] || 0);
+    var dataKeluar = tanggal.map(month => dataAsetKeluar[month] || 0);
 
-    // Array untuk label bulan
-    var bulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-
-    // Menggambar grafik batang (bar chart)
     var ctxBar = document.getElementById('barChart').getContext('2d');
     var barChart = new Chart(ctxBar, {
         type: 'bar',
         data: {
-            labels: bulan,
+            labels: tanggal,
             datasets: [{
                 label: 'Aset Masuk',
                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
-                data: Object.values(dataAsetMasuk)
+                data: dataMasuk
             }, {
                 label: 'Aset Keluar',
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
                 borderColor: 'rgba(255, 99, 132, 1)',
                 borderWidth: 1,
-                data: Object.values(dataAsetKeluar)
+                data: dataKeluar
             }]
         },
         options: {
@@ -303,11 +297,9 @@
         }
     });
 
-    // Menghitung total aset masuk dan keluar
-    var totalAsetMasuk = Object.values(dataAsetMasuk).reduce((a, b) => a + b, 0);
-    var totalAsetKeluar = Object.values(dataAsetKeluar).reduce((a, b) => a + b, 0);
+    var totalAsetMasuk = dataMasuk.reduce((a, b) => a + b, 0);
+    var totalAsetKeluar = dataKeluar.reduce((a, b) => a + b, 0);
 
-    // Menggambar grafik lingkaran (pie chart)
     var ctxPie = document.getElementById('pieChart').getContext('2d');
     var pieChart = new Chart(ctxPie, {
         type: 'pie',

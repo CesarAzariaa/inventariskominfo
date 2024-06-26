@@ -139,7 +139,7 @@
 										<div class="col col-stats ml-3 ml-sm-0">
 											<div class="numbers">
 												<p class="card-category">Data Aset</p>
-												<h4 class="card-title">1,374</h4>
+												<h4 class="card-title">{{ is_countable($data_aset) ? count($data_aset) : '0' }}</h4>
 											</div>
 										</div>
 									</div>
@@ -194,106 +194,66 @@
 						</div>
 					  </div>
 					  <script>
-						// Data barang masuk dan barang keluar untuk bulan Januari sampai Desember
-						// Array dataBarangMasuk dan dataBarangKeluar yang baru
-                       var dataBarangMasukNormalized = [];
-                       var dataBarangKeluarNormalized = [];
-
-                        // Cari nilai maksimum di antara kedua array
-                       var maxInput = Math.max(...dataBarangMasuk);
-                       var maxOutput = Math.max(...dataBarangKeluar);
-
-                        // Hitung faktor normalisasi
-                       var normalizationFactor = 50 / Math.max(maxInput, maxOutput);
-
-                        // Normalisasi kedua array
-                        dataBarangMasukNormalized = dataBarangMasuk.map(value => Math.round(value * normalizationFactor));
-						dataBarangKeluarNormalized = dataBarangKeluar.map(value => Math.round(value * normalizationFactor));
-
-                        // Output hasil normalisasi
-                        console.log("Data Barang Masuk yang Dinormalisasi: ", dataBarangMasukNormalized);
-                        console.log("Data Barang Keluar yang Dinormalisasi: ", dataBarangKeluarNormalized);
-
+						var dataAsetMasuk = @json($dataAsetMasuk);
+						var dataAsetKeluar = @json($dataAsetKeluar);
+						var tanggal = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 					
-						// Menggambar chart
-						var ctx = document.getElementById('barChart').getContext('2d');
-						var barChart = new Chart(ctx, {
-						  type: 'bar',
-						  data: {
-							labels: bulan,
-							datasets: [{
-							  label: 'Aset Masuk',
-							  backgroundColor: 'rgba(54, 162, 235, 0.5)',
-							  borderColor: 'rgba(54, 162, 235, 1)',
-							  borderWidth: 1,
-							  data: dataBarangMasuk
-							}, {
-							  label: 'Aset Keluar',
-							  backgroundColor: 'rgba(255, 99, 132, 0.5)',
-							  borderColor: 'rgba(255, 99, 132, 1)',
-							  borderWidth: 1,
-							  data: dataBarangKeluar
-							}]
-						  },
-						  options: {
-							scales: {
-							  yAxes: [{
-								ticks: {
-								  beginAtZero: true
+						// Mengisi data untuk chart
+						var dataMasuk = tanggal.map(month => dataAsetMasuk[month] || 0);
+						var dataKeluar = tanggal.map(month => dataAsetKeluar[month] || 0);
+					
+						var ctxBar = document.getElementById('barChart').getContext('2d');
+						var barChart = new Chart(ctxBar, {
+							type: 'bar',
+							data: {
+								labels: tanggal,
+								datasets: [{
+									label: 'Aset Masuk',
+									backgroundColor: 'rgba(54, 162, 235, 0.5)',
+									borderColor: 'rgba(54, 162, 235, 1)',
+									borderWidth: 1,
+									data: dataMasuk
+								}, {
+									label: 'Aset Keluar',
+									backgroundColor: 'rgba(255, 99, 132, 0.5)',
+									borderColor: 'rgba(255, 99, 132, 1)',
+									borderWidth: 1,
+									data: dataKeluar
+								}]
+							},
+							options: {
+								scales: {
+									yAxes: [{
+										ticks: {
+											beginAtZero: true
+										}
+									}]
 								}
-							  }]
 							}
-						  }
 						});
-					  </script>
-					  
-					  <script>
-						// Data barang masuk dan barang keluar untuk bulan Januari sampai Desember
-						// Array dataBarangMasuk dan dataBarangKeluar yang baru
-						var dataBarangMasukNormalized = [];
-						var dataBarangKeluarNormalized = [];
 					
-						// Cari nilai maksimum di antara kedua array
-						var maxInput = Math.max(...dataBarangMasuk);
-						var maxOutput = Math.max(...dataBarangKeluar);
+						var totalAsetMasuk = dataMasuk.reduce((a, b) => a + b, 0);
+						var totalAsetKeluar = dataKeluar.reduce((a, b) => a + b, 0);
 					
-						// Hitung faktor normalisasi
-						var normalizationFactor = 50 / Math.max(maxInput, maxOutput);
-					
-						// Normalisasi kedua array
-						dataBarangMasukNormalized = dataBarangMasuk.map(value => Math.round(value * normalizationFactor));
-						dataBarangKeluarNormalized = dataBarangKeluar.map(value => Math.round(value * normalizationFactor));
-					
-						// Output hasil normalisasi
-						console.log("Data Barang Masuk yang Dinormalisasi: ", dataBarangMasukNormalized);
-						console.log("Data Barang Keluar yang Dinormalisasi: ", dataBarangKeluarNormalized);
-					
-						// Menggambar chart
-						var ctx = document.getElementById('pieChart').getContext('2d');
-						var pieChart = new Chart(ctx, {
-						  type: 'pie',
-						  data: {
-							labels: ['Aset Masuk', 'Aset Keluar'],
-							datasets: [{
-							  label: 'Persentase',
-							  backgroundColor: ['rgba(54, 162, 235, 0.5)', 'rgba(255, 99, 132, 0.5)'],
-							  borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
-							  borderWidth: 1,
-							  data: [dataBarangMasukNormalized.reduce((a, b) => a + b, 0), dataBarangKeluarNormalized.reduce((a, b) => a + b, 0)]
-							}]
-						  },
-						  options: {
-							scales: {
-							  yAxes: [{
-								ticks: {
-								  beginAtZero: true
-								}
-							  }]
+						var ctxPie = document.getElementById('pieChart').getContext('2d');
+						var pieChart = new Chart(ctxPie, {
+							type: 'pie',
+							data: {
+								labels: ['Aset Masuk', 'Aset Keluar'],
+								datasets: [{
+									label: 'Persentase',
+									backgroundColor: ['rgba(54, 162, 235, 0.5)', 'rgba(255, 99, 132, 0.5)'],
+									borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
+									borderWidth: 1,
+									data: [totalAsetMasuk, totalAsetKeluar]
+								}]
+							},
+							options: {
+								responsive: true,
+								maintainAspectRatio: false
 							}
-						  }
 						});
-					  </script>
-					
+					</script>
 									</div>
 								</div>
 							</div>

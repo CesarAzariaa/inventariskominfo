@@ -54,7 +54,7 @@
 					<button type="submit" class="btn btn-primary btn-rounded btn-login">Sign in</button>
 				</div>
 					<div class="login-account">
-					<span class="msg">Don't have an account yet ?</span>
+					<span class="msg">Belum Memiliki Akun ?</span>
 					<a href="register" id="show-signup" class="link">Sign Up</a>
 					</div>
 				</div>

@@ -11,6 +11,7 @@ use BaconQrCode\Writer;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd;
+use App\Http\Controllers\AsetKeluarController;
 
 class DataAsetController extends Controller
 {
@@ -77,7 +78,7 @@ public function store(Request $request)
 
 public function update(Request $request, $id)
 {
-    $data_aset = Data_aset::findOrFail($id); // Memastikan data aset ditemukan atau mengembalikan error 404
+    $data_aset = Data_aset::findOrFail($id);
 
     // Validasi input termasuk file gambar
     $validatedData = $request->validate([
@@ -88,13 +89,12 @@ public function update(Request $request, $id)
         'stok' => 'required|numeric',
         'status' => 'required',
         'tanggal' => 'required|date',
-        'nama_file' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048', // 'sometimes' karena file mungkin tidak selalu diupdate
+        'nama_file' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048', 
     ]);
 
-    $input = $validatedData; // Gunakan data yang telah divalidasi
+    $input = $validatedData; 
 
     if ($request->hasFile('nama_file')) {
-        // Hapus gambar lama jika ada
         if ($data_aset->nama_file) {
             $oldPath = 'gambar_aset/' . $data_aset->nama_file;
             if (Storage::disk('public')->exists($oldPath)) {
@@ -115,6 +115,24 @@ public function update(Request $request, $id)
 
     // Proses update data
     $data_aset->update($input);
+
+    // Mengurangi stok jika status adalah "dipinjam" atau "rusak"
+    if (in_array($input['status'], ['dipinjam', 'rusak'])) {
+        $jumlah_keluar = $request->input('jumlah_keluar', 0);
+        if ($jumlah_keluar > 0 && $jumlah_keluar <= $data_aset->stok) {
+            $data_aset->stok -= $jumlah_keluar;
+            $data_aset->save();
+
+            // Menambahkan data ke AsetKeluarController
+            $asetKeluarController = new AsetKeluarController();
+            $asetKeluarController->store([
+                'data_aset_id' => $data_aset->id,
+                'jumlah' => $jumlah_keluar,
+                'status' => $input['status'],
+                'tanggal' => now(),
+            ]);
+        }
+    }
 
     return redirect()->route('data_aset')->with('success', 'Data berhasil diperbarui');
 }

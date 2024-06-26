@@ -82,9 +82,14 @@
 				<div class="row form-sub m-0">
 				</div>
 				<div class="form-action mb-3">
-					<a href="login" id="show-signin" class="btn btn-danger btn-rounded btn-login mr-3">Cancel</a>
 					<button type="submit" class="btn btn-primary btn-rounded btn-login">Sign in</button>
 				</div>
+					<div class="login-account">
+						<span class="msg">Sudah Memiliki Akun ?</span>
+						<a href="login" id="show-signup" class="link">Sign in</a>
+					</div>
+				</div>
+			</div>
 				</div>
 			</form>
 		</div>

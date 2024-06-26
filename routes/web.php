@@ -50,6 +50,10 @@ Route::get('/data_peminjaman', [DataPeminjamanController::class, 'data_peminjama
 
 //Data Aset Keluar
 Route::get('/aset_keluar', [AsetKeluarController::class, 'aset_keluar'])->name('aset_keluar')->middleware('auth');
+Route::post('/aset_keluar/store', [AsetKeluarController::class, 'store'])->name('aset_keluar.store')->middleware('auth');
+Route::put('/aset_keluar/update/{id}', [AsetKeluarController::class, 'update'])->name('aset_keluar.update')->middleware('auth');
+Route::delete('/aset_keluar/destroy/{id}', [AsetKeluarController::class, 'destroy'])->name('aset_keluar.destroy')->middleware('auth');
+
 
 
 

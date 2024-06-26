@@ -27,7 +27,7 @@
                         <div class="card-header">
                             <div class="d-flex align-items-center">
                                 <h4 class="card-title">Data Aset</h4>
-                                <button class="btn btn-primary btn-round ml-auto" data-toggle="modal" data-target="#modalCreate">
+                                <button class="btn btn-success btn-round ml-auto" data-toggle="modal" data-target="#modalCreate">
                                     <i class="fa fa-plus"></i>
                                     Tambah Data
                                 </button>
@@ -66,10 +66,9 @@
                                                     <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Hapus</a>
                                                 </td>
                                             </tr>
-
                                             <!-- Modal View -->
                                             <div class="modal fade" id="modalView{{$row->id}}" tabindex="-1" role="dialog" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-dialog custom-modal" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header no-bd">
                                                             <h3 class="modal-title">
@@ -121,15 +120,15 @@
                                                             <div class="form-group">
                                                                 <label>QR Code</label><br>
                                                                 @if ($row->barcode)
-                                                                    <img src="{{ asset('storage/' . $row->barcode) }}" alt="QR Code">
+                                                                    <img src="{{ asset('storage/' . $row->barcode) }}" alt="QR Code" style="width: 125px; height: 125px;">
                                                                 @else
                                                                 <p>QR Code tidak tersedia.</p>
                                                             @endif
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="close" data-dismiss="modal">Close</button>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
