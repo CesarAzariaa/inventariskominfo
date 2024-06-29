@@ -65,8 +65,8 @@
                                            <td>{{$row->asal_instansi}}</td>
                                            <td>{{$row->role}}</td>
                                           <td>
-                                            <a href="#modalEdit{{$row->id}}" data-toggle="modal"class="btn btn-xs btn-primary"><i class="fa fa-edit"></i>Edit</a>
-                                            <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i>Hapus</a>
+                                            <a href="#modalEdit{{$row->id}}" data-toggle="modal"class="btn btn-xs btn-primary btn-custom"><i class="fa fa-edit"></i>Edit</a>
+                                            <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger btn-custom"><i class="fa fa-trash"></i>Hapus</a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -106,15 +106,15 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Username</label>
-                                            <input type="username" class="form-control" name="username" placeholder="Username..." required>
+                                            <input type="text" class="form-control" name="username" placeholder="Username..." required>
                                         </div>
                                         <div class="form-group">
                                             <label>No Handphone</label>
-                                            <input type="no_handphone" class="form-control" name="no_handphone" placeholder="No Handphone..." required>
+                                            <input type="number" class="form-control" name="no_handphone" placeholder="No Handphone..." required>
                                         </div>
                                         <div class="form-group">
                                             <label>Asal Instansi</label>
-                                            <input type="asal_instansi" class="form-control" name="asal_instansi" placeholder="Asal Instansi..." required>
+                                            <input type="text" class="form-control" name="asal_instansi" placeholder="Asal Instansi..." required>
                                         </div>
                                         <div class="form-group">
                                             <label>Password</label>
@@ -172,7 +172,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>No Handphone</label>
-                                            <input type="no_handphone" class="form-control" name="no_handphone" value="{{$d->no_handphone}}" placeholder="" required>
+                                            <input type="number" class="form-control" name="no_handphone" value="{{$d->no_handphone}}" placeholder="" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Asal Instansi</label>
@@ -237,6 +237,33 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <style>
+                                input[type=number]::-webkit-outer-spin-button,
+                                input[type=number]::-webkit-inner-spin-button {
+                                    -webkit-appearance: none;
+                                    margin: 0;
+                                }
+                            
+                                input[type=number] {
+                                    -moz-appearance: textfield;
+                                }
+                            </style>
+                            
+                            <style>
+                                .btn-custom {
+                                    width: 60px;
+                                }
+                            
+                                @media (max-width: 768px) {
+                                    .btn-custom {
+                                        width: 100%; 
+                                        margin-bottom: 5px;
+                                    }
+                                }
+                            </style>
+
+
 @endforeach
 
 @endsection

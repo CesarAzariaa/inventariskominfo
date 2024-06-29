@@ -10,6 +10,7 @@ use App\Http\Controllers\DataAsetController;
 use App\Http\Controllers\AsetUserController;
 use App\Http\Controllers\AsetKeluarController;
 use App\Http\Controllers\DataPeminjamanController;
+use App\Http\Controllers\CetakAsetController;
 
 //Landing Page & Dashboard
 Route::get('/', [HomeController::class, 'index'])->name('landingpage');
@@ -53,6 +54,11 @@ Route::get('/aset_keluar', [AsetKeluarController::class, 'aset_keluar'])->name('
 Route::post('/aset_keluar/store', [AsetKeluarController::class, 'store'])->name('aset_keluar.store')->middleware('auth');
 Route::put('/aset_keluar/update/{id}', [AsetKeluarController::class, 'update'])->name('aset_keluar.update')->middleware('auth');
 Route::delete('/aset_keluar/destroy/{id}', [AsetKeluarController::class, 'destroy'])->name('aset_keluar.destroy')->middleware('auth');
+
+//Cetak Data Aset
+Route::get('/cetak-data-aset', [CetakAsetController::class, 'cetak'])->name('cetak-data-aset')->middleware('auth');
+Route::get('/data-aset-pdf', [CetakAsetController::class, 'dataAsetPdf'])->name('data-aset-pdf')->middleware('auth');
+
 
 
 

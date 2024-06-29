@@ -57,8 +57,8 @@
                                            <td>{{$no++}}</td>
                                            <td>{{$row->nama_kategori}}</td>
                                           <td>
-                                            <a href="#modalEdit{{$row->id}}" data-toggle="modal"class="btn btn-xs btn-primary"><i class="fa fa-edit"></i>Edit</a>
-                                            <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i>Hapus</a>
+                                            <a href="#modalEdit{{$row->id}}" data-toggle="modal"class="btn btn-xs btn-primary btn-custom"><i class="fa fa-edit"></i>Edit</a>
+                                            <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger btn-custom"><i class="fa fa-trash"></i>Hapus</a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -175,6 +175,20 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <style>
+                                .btn-custom {
+                                    width: 60px;
+                                }
+                            
+                                @media (max-width: 768px) {
+                                    .btn-custom {
+                                        width: 50%; 
+                                        margin-bottom: 5px;
+                                    }
+                                }
+                            </style>
+
 @endforeach
 
 @endsection

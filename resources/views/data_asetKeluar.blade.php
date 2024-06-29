@@ -63,9 +63,9 @@
                                                <td>{{$row->status}}</td>
                                                <td>{{$row->tanggal}}</td>
                                                <td>
-                                                <a href="#modalView{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-info"><i class="fa fa-eye"></i> View</a>
-                                                <a href="#modalEdit{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
-                                                <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Hapus</a>
+                                                <a href="#modalView{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-info btn-custom"><i class="fa fa-eye"></i> View</a>
+                                                <a href="#modalEdit{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-primary btn-custom"><i class="fa fa-edit"></i> Edit</a>
+                                                <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger btn-custom"><i class="fa fa-trash"></i> Hapus</a>
                                             </td>
                                            </tr>
                                            <!-- Modal View -->
@@ -343,7 +343,21 @@
             </form>
         </div>
     </div>
-</div>    
+</div>
+
+<style>
+    .btn-custom {
+        width: 60px;
+    }
+
+    @media (max-width: 768px) {
+        .btn-custom {
+            width: 100%; 
+            margin-bottom: 5px;
+        }
+    }
+</style>
+
 @endforeach
 
 @endsection

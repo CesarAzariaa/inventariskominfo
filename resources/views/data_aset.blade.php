@@ -61,14 +61,14 @@
                                                 <td>{{$row->status}}</td>
                                                 <td>{{$row->tanggal}}</td>
                                                 <td>
-                                                    <a href="#modalView{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-info"><i class="fa fa-eye"></i> View</a>
-                                                    <a href="#modalEdit{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
-                                                    <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Hapus</a>
+                                                    <a href="#modalView{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-info btn-custom"><i class="fa fa-eye"></i> View</a>
+                                                    <a href="#modalEdit{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-primary btn-custom"><i class="fa fa-edit"></i> Edit</a>
+                                                    <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger btn-custom"><i class="fa fa-trash"></i> Hapus</a>
                                                 </td>
                                             </tr>
                                             <!-- Modal View -->
                                             <div class="modal fade" id="modalView{{$row->id}}" tabindex="-1" role="dialog" aria-hidden="true">
-                                                <div class="modal-dialog custom-modal" role="document">
+                                                <div class="modal-dialog sm" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header no-bd">
                                                             <h3 class="modal-title">
@@ -121,12 +121,7 @@
                                                                 <label>QR Code</label><br>
                                                                 @if ($row->barcode)
                                                                     <img src="{{ asset('storage/' . $row->barcode) }}" alt="QR Code" style="width: 125px; height: 125px;">
-                                                                @else
-                                                                <p>QR Code tidak tersedia.</p>
                                                             @endif
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                     </div>
@@ -200,8 +195,6 @@
                             <option value="">Pilih Status</option>
                             <option value="Tersedia">Tersedia</option>
                             <option value="Terpakai">Terpakai</option>
-                            <option value="Rusak">Rusak</option>
-                            <option value="Dipinjam">Dipinjam</option>
                         </select>
                     </div>
 
@@ -340,7 +333,20 @@
                 </form>
             </div>
         </div>
-    </div>    
+    </div>
+    
+    <style>
+        .btn-custom {
+            width: 60px;
+        }
+    
+        @media (max-width: 768px) {
+            .btn-custom {
+                width: 100%; 
+                margin-bottom: 5px;
+            }
+        }
+    </style>
 @endforeach
 
 @endsection

@@ -129,9 +129,6 @@
         <p><strong>QR Code:</strong></p>
         <img src="{{ asset('storage/' . $row->barcode) }}" alt="QR Code" style="width: 125px; height: 125px;">
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
     </div>
   </div>
 </div>

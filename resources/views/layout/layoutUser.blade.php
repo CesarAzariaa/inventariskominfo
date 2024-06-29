@@ -51,7 +51,7 @@
 			<!-- Navbar Header -->
 			<nav class="navbar navbar-header navbar-expand-lg">   
 				<div style="text-align: center;">
-					<font color="white" alt="navbar-brand" class="navbar-brand">Dinas Komunikasi Informatika dan Statistik</font>
+					<font color="white" alt="navbar-brand" class="navbar-brand" style="font-weight: bold;">Diskominfotik Bengkalis</font>
 				</div>
 			</nav>
 			<!-- End Navbar -->
@@ -78,7 +78,7 @@
 							</div>
 						</div>
 						<ul class="nav">
-							<li class="nav-item active">
+							<li class="nav-item {{ request()->is('homeUser') ? 'active' : '' }}">
 								<a href="homeUser">
 									<i class="fas fa-home"></i>
 									<p>Dashboard</p>
@@ -91,14 +91,14 @@
 								<h4 class="text-section">Components</h4>
 							</li>
                             
-							<li class="nav-item">
+							<li class="nav-item {{ request()->is('aset_user') ? 'active' : '' }}">
 								<a href="{{ route('aset_user') }}">
 									<i class="fas fa-box"></i>
 									<p>Data Aset</p>
 								</a>
 							</li>
 		
-							<li class="nav-item">
+							<li class="nav-item {{ request()->is('data_peminjaman') ? 'active' : '' }}">
 								<a href="{{ 'data_peminjaman' }}">
 									<i class="fas fa-address-book"></i>
 									<p>Peminjaman Aset</p>
@@ -141,8 +141,14 @@
 			$(document).ready(function() {
 				$('#add-row').DataTable({
 				});
+				
+				$('.nav-item a').on('click', function() {
+					$('.nav-item').removeClass('active');
+					$(this).parent().addClass('active');
+				});
 			});
 		</script>
+
 			@if(session('success'))
 			<script>
 				Swal.fire({

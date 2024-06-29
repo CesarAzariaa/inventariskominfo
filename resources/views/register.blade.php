@@ -50,7 +50,7 @@
 				@enderror
 				
 				<div class="form-group form-floating-label">
-					<input id="no_handphone" name="no_handphone" type="no_handphone" class="form-control input-border-bottom" required>
+					<input id="no_handphone" name="no_handphone" type="number" class="form-control input-border-bottom" required>
 					<label for="no_handphone" class="placeholder" value="{{ old('no_handphone') }}">Nomor Handphone</label>
 					<div class="show-no_handphone">
 					</div>
@@ -82,7 +82,7 @@
 				<div class="row form-sub m-0">
 				</div>
 				<div class="form-action mb-3">
-					<button type="submit" class="btn btn-primary btn-rounded btn-login">Sign in</button>
+					<button type="submit" class="btn btn-primary btn-rounded btn-login">Sign Up</button>
 				</div>
 					<div class="login-account">
 						<span class="msg">Sudah Memiliki Akun ?</span>
@@ -120,6 +120,19 @@
 			});
 		</script>
 	@endif
+
+	<style>
+    /* CSS untuk menghilangkan panah pada input type number */
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
 
 </body>
 </html>

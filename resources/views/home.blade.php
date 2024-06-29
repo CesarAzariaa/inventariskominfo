@@ -79,7 +79,7 @@
 					</div>
 					<ul class="nav">
 						<li class="nav-item active">
-							<a href="admin.home">
+							<a href="home">
 								<i class="fas fa-home"></i>
 								<p>Dashboard</p>
 							</a>
@@ -140,7 +140,7 @@
 							<div class="collapse" id="submenu">
 								<ul class="nav nav-collapse">
 									<li>
-										<a data-toggle="collapse" href="#cetak">
+										<a href="cetak-data-aset">
 											<span class="sub-item">Cetak Data Aset</span>
 										</a>
 									</li>

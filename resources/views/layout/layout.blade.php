@@ -51,8 +51,8 @@
 			<!-- Navbar Header -->
 			<nav class="navbar navbar-header navbar-expand-lg">   
 				<div style="text-align: center;">
-					<font color="white" alt="navbar-brand" class="navbar-brand" style="font-weight: bold;">Dinas Komunikasi Informatika dan Statistik</font>
-				</div>				
+					<font color="white" alt="navbar-brand" class="navbar-brand" style="font-weight: bold;">Diskominfotik Bengkalis</font>
+				</div>			
 			</nav>
 			<!-- End Navbar -->
 		</div>
@@ -78,7 +78,7 @@
 							</div>
 						</div>
 						<ul class="nav">
-							<li class="nav-item active">
+							<li class="nav-item {{ request()->is('home') ? 'active' : '' }}">
 								<a href="home">
 									<i class="fas fa-home"></i>
 									<p>Dashboard</p>
@@ -90,20 +90,20 @@
 								</span>
 								<h4 class="text-section">Components</h4>
 							</li>
-							<li class="nav-item">
+							<li class="nav-item {{ request()->is('datauser') || request()->is('kategori') ? 'active' : '' }}">
 								<a data-toggle="collapse" href="#base">
 									<i class="fas fa-layer-group"></i>
 									<p>Data Master</p>
 									<span class="caret"></span>
 								</a>
-								<div class="collapse" id="base">
+								<div class="collapse {{ request()->is('datauser') || request()->is('kategori') ? 'show' : '' }}" id="base">
 									<ul class="nav nav-collapse">
-										<li>
+										<li class="{{ request()->is('datauser') ? 'active' : '' }}">
 											<a href="datauser">
 												<span class="sub-item">Data User</span>
 											</a>
 										</li>
-										<li>
+										<li class="{{ request()->is('kategori') ? 'active' : '' }}">
 											<a href="kategori">
 												<span class="sub-item">Data Kategori</span>
 											</a>
@@ -112,41 +112,41 @@
 								</div>
 							</li>
 
-							<li class="nav-item">
+							<li class="nav-item {{ request()->is('data_aset') ? 'active' : '' }}">
 								<a href="{{ route('data_aset') }}">
 									<i class="fas fa-box"></i>
 									<p>Data Aset</p>
 								</a>
 							</li>
 
-							<li class="nav-item">
+							<li class="nav-item {{ request()->is('aset_keluar') ? 'active' : '' }}">
 								<a href="{{ route('aset_keluar') }}">
 									<i class="fas fa-truck"></i>
 									<p>Data Aset Keluar</p>
 								</a>
 							</li>
 							
-							<li class="nav-item">
+							<li class="nav-item {{ request()->is('transaksi_peminjaman_aset') ? 'active' : '' }}">
 								<a data-toggle="collapse" href="#users">
 									<i class="fas fa-users"></i>
 									<p>Transaksi Peminjaman Aset</p>
 								</a>
 							</li>
 							
-							<li class="nav-item">
+							<li class="nav-item {{ request()->is('cetak-data-aset') || request()->is('cetak-qr-code') ? 'active' : '' }}">
 								<a data-toggle="collapse" href="#submenu">
 									<i class="fa fa-print"></i>
 									<p>Laporan Cetak</p>
 									<span class="caret"></span>
 								</a>
-								<div class="collapse" id="submenu">
+								<div class="collapse {{ request()->is('cetak-data-aset') || request()->is('cetak-qr-code') ? 'show' : '' }}" id="submenu">
 									<ul class="nav nav-collapse">
-										<li>
-											<a data-toggle="collapse" href="#cetak">
+										<li class="{{ request()->is('cetak-data-aset') ? 'active' : '' }}">
+											<a href="cetak-data-aset">
 												<span class="sub-item">Cetak Data Aset</span>
 											</a>
 										</li>
-										<li>
+										<li class="{{ request()->is('cetak-qr-code') ? 'active' : '' }}">
 											<a data-toggle="collapse" href="#subnav2">
 												<span class="sub-item">Cetak QR Code</span>
 											</a>
@@ -189,6 +189,11 @@
 		<script >
 			$(document).ready(function() {
 				$('#add-row').DataTable({
+				});
+				
+				$('.nav-item a').on('click', function() {
+					$('.nav-item').removeClass('active');
+					$(this).parent().addClass('active');
 				});
 			});
 		</script>
