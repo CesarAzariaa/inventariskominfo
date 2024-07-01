@@ -11,6 +11,7 @@ use App\Http\Controllers\AsetUserController;
 use App\Http\Controllers\AsetKeluarController;
 use App\Http\Controllers\DataPeminjamanController;
 use App\Http\Controllers\CetakAsetController;
+use App\Http\Controllers\CetakQrController;
 
 //Landing Page & Dashboard
 Route::get('/', [HomeController::class, 'index'])->name('landingpage');
@@ -59,7 +60,12 @@ Route::delete('/aset_keluar/destroy/{id}', [AsetKeluarController::class, 'destro
 Route::get('/cetak-data-aset', [CetakAsetController::class, 'cetak'])->name('cetak-data-aset')->middleware('auth');
 Route::get('/data-aset-pdf', [CetakAsetController::class, 'dataAsetPdf'])->name('data-aset-pdf')->middleware('auth');
 
+//Cetak Data Qr Code
+Route::get('/cetak-qr-code', [CetakQrController::class, 'cetak_qr'])->name('cetak-qr-code')->middleware('auth');
+Route::get('/qr-code-pdf', [CetakQrController::class, 'cetak_qr_pdf'])->name('qr-code-pdf')->middleware('auth');
 
+//Detail Qr Code
+Route::get('/data-aset/{id}', [DataAsetController::class, 'show'])->name('detail.data_aset');
 
 
 

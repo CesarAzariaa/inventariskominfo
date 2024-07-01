@@ -20,23 +20,62 @@ class CetakAsetController extends Controller
     public function dataAsetPdf(Request $request) 
     {
         $kategori_id = $request->input('kategori_id');
+        $status = $request->input('status');
+        
         $data_aset = Data_aset::with('kategori')
             ->when($kategori_id, function($query) use ($kategori_id) {
                 return $query->where('kategori_id', $kategori_id);
             })
+            ->when($status, function($query) use ($status) {
+                return $query->where('status', $status);
+            })
             ->get();
-        $data_kategori = Kategori::all();
 
         // Inisialisasi Mpdf
         $mpdf = new Mpdf();
 
         // Tambahkan CSS untuk styling
         $stylesheet = '
-            body { font-family: sans-serif; }
-            h1 { text-align: center; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid #000; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
+        <style>
+            body {
+                font-family: , sans-serif;
+                margin: 20px;
+            }
+            h1 {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+            table, th, td {
+                border: 1px solid black;
+            }
+            th, td {
+                padding: 8px;
+                text-align: left;
+            }
+            th {
+                background-color: #428dfd;
+                color: #ffffff; /* Change header font color here */
+            }
+            tbody tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            tbody tr:hover {
+                background-color: #f1f1f1;
+            }
+            tbody td {
+                color: #000000; 
+            }
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        </style>
         ';
         $mpdf->WriteHTML($stylesheet, 1);
 

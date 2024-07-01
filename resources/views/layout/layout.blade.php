@@ -147,7 +147,7 @@
 											</a>
 										</li>
 										<li class="{{ request()->is('cetak-qr-code') ? 'active' : '' }}">
-											<a data-toggle="collapse" href="#subnav2">
+											<a href="cetak-qr-code">
 												<span class="sub-item">Cetak QR Code</span>
 											</a>
 										</li>

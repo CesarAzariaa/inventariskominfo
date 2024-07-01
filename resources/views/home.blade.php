@@ -145,7 +145,7 @@
 										</a>
 									</li>
 									<li>
-										<a data-toggle="collapse" href="#subnav2">
+										<a href="cetak-qr-code">
 											<span class="sub-item">Cetak QR Code</span>
 										</a>
 									</li>

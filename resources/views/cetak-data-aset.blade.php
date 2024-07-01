@@ -1,7 +1,6 @@
 @extends('layout.layout')
 
 @section('content')
-    
 <div class="main-panel">
     <div class="content">
         <div class="page-inner">
@@ -33,7 +32,7 @@
                             <div class="d-flex align-items-center">
                                 <h4 class="card-title">Cetak Data Aset</h4>
                             </div>
-                            <form action="{{ route('data-aset-pdf') }}" method="GET">
+                            <form id="cetak-form" action="{{ route('data-aset-pdf') }}" method="GET">
                                 <div class="form-group">
                                     <label for="filter-kategori">Pilih Kategori</label>
                                     <select id="filter-kategori" name="kategori_id" class="form-control">
@@ -43,8 +42,18 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="form-group">
+                                    <label for="filter-status">Pilih Status</label>
+                                    <select id="filter-status" name="status" class="form-control">
+                                        <option value="">Semua</option>
+                                        <option value="tersedia">Tersedia</option>
+                                        <option value="terpakai">Terpakai</option>
+                                        <option value="dipinjam">Dipinjam</option>
+                                        <option value="rusak">Rusak</option>
+                                    </select>
+                                </div>
                                 <div class="form-group text-left">
-                                    <button type="submit" class="btn btn-primary">Cetak PDF</button>
+                                    <button type="button" id="cetak-button" class="btn btn-primary">Cetak PDF</button>
                                 </div>
                             </form>
                         </div>
@@ -87,20 +96,43 @@
 </div>
 
 <script>
-    document.getElementById('filter-kategori').addEventListener('change', function() {
-        var kategori = this.options[this.selectedIndex].text; // Ambil teks dari opsi yang dipilih
-        console.log("Kategori yang dipilih: ", kategori); // Tambahkan ini untuk debugging
+    function filterRows() {
+        var kategori = document.getElementById('filter-kategori').options[document.getElementById('filter-kategori').selectedIndex].text;
+        var status = document.getElementById('filter-status').value;
+        
         var rows = document.querySelectorAll('.aset-row');
+        var dataAvailable = false;
+
         rows.forEach(function(row) {
             var rowKategori = row.getAttribute('data-kategori');
-            console.log("Kategori pada baris: ", rowKategori); // Tambahkan ini untuk debugging
-            if (kategori === "Semua" || rowKategori === kategori) {
+            var rowStatus = row.querySelector('td:nth-child(6)').innerText.toLowerCase();
+
+            if ((kategori === "Semua" || rowKategori === kategori) && (status === "" || rowStatus === status)) {
                 row.style.display = "";
+                dataAvailable = true;
             } else {
                 row.style.display = "none";
             }
         });
+
+        return dataAvailable;
+    }
+
+    document.getElementById('filter-kategori').addEventListener('change', filterRows);
+    document.getElementById('filter-status').addEventListener('change', filterRows);
+
+    document.getElementById('cetak-button').addEventListener('click', function() {
+        var dataAvailable = filterRows();
+
+        if (dataAvailable) {
+            document.getElementById('cetak-form').submit();
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Data Tidak Tersedia',
+                text: 'Tidak ada data yang sesuai dengan filter yang dipilih.'
+            });
+        }
     });
 </script>
-
 @endsection

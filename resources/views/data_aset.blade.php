@@ -43,6 +43,7 @@
                                             <th>Nama Aset</th>
                                             <th>Kategori</th>
                                             <th>Merk</th>
+                                            <th>Model</th>
                                             <th>Stok</th>
                                             <th>Status</th>
                                             <th>Tanggal</th>
@@ -57,6 +58,7 @@
                                                 <td>{{$row->nama_aset}}</td>
                                                 <td>{{$row->nama_kategori}}</td>
                                                 <td>{{$row->merk}}</td>
+                                                <td>{{ $row->model }}</td>
                                                 <td>{{$row->stok}} Pcs</td>
                                                 <td>{{$row->status}}</td>
                                                 <td>{{$row->tanggal}}</td>
