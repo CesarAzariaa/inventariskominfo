@@ -48,7 +48,10 @@ Route::delete('/aset/destroy{id}', [DataAsetController::class, 'destroy'])->name
 Route::get('/aset_user', [AsetUserController::class, 'aset_user'])->name('aset_user')->middleware('auth');
 
 //Data Peminjaman
-Route::get('/data_peminjaman', [DataPeminjamanController::class, 'data_peminjaman'])->name('data_peminjaman')->middleware('auth');
+Route::middleware(['auth'])->group(function () {
+Route::get('/data_peminjaman', [DataPeminjamanController::class, 'data_peminjaman'])->name('data_peminjaman');
+Route::post('/peminjaman', [DataPeminjamanController::class, 'store'])->name('peminjaman.store');
+});
 
 //Data Aset Keluar
 Route::get('/aset_keluar', [AsetKeluarController::class, 'aset_keluar'])->name('aset_keluar')->middleware('auth');
@@ -58,7 +61,7 @@ Route::delete('/aset_keluar/destroy/{id}', [AsetKeluarController::class, 'destro
 
 //Cetak Data Aset
 Route::get('/cetak-data-aset', [CetakAsetController::class, 'cetak'])->name('cetak-data-aset')->middleware('auth');
-Route::get('/data-aset-pdf', [CetakAsetController::class, 'dataAsetPdf'])->name('data-aset-pdf')->middleware('auth');
+Route::post('/data-aset/pdf', [CetakAsetController::class, 'dataAsetPdf'])->name('data-aset.pdf')->middleware('auth');
 
 //Cetak Data Qr Code
 Route::get('/cetak-qr-code', [CetakQrController::class, 'cetak_qr'])->name('cetak-qr-code')->middleware('auth');

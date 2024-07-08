@@ -40,6 +40,7 @@
                                             <th>Merk</th>
                                             <th>Model</th>
                                             <th>Stok</th>
+                                            <th>Status</th>
                                             <th>QR Code</th>
                                         </tr>
                                     </thead>
@@ -53,8 +54,20 @@
                                                 <td>{{$row->merk}}</td>
                                                 <td>{{ $row->model }}</td>
                                                 <td>{{$row->stok}} Pcs</td>
+                                                <td>{{$row->status}}</td>
                                                 <td>
-                                                    <img src="{{ asset('storage/qr_codes/' . $row->id . '.svg') }}" alt="QR Code" style="width: 70px; height: 70px;" />
+                                                    @php
+                                                        $qrCodeUrl = asset('storage/' . $row->barcode);
+                                                        $qrCodePath = storage_path('app/public/' . $row->barcode);
+                                                        if (!file_exists($qrCodePath)) {
+                                                            \Log::error('QR Code file not found for asset ID: ' . $row->id);
+                                                        }
+                                                    @endphp
+                                                    @if (file_exists($qrCodePath))
+                                                        <img src="{{ $qrCodeUrl }}" alt="QR Code" style="width: 70px; height: 70px;" />
+                                                    @else
+                                                        <p>QR Code not found</p>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach

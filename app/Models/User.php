@@ -24,6 +24,7 @@ class User extends Authenticatable
         'role',
         'no_handphone',
         'asal_instansi',
+        'chat_id'
     ];
 
     /**

@@ -33,7 +33,7 @@
 				<a href="#" class="logo">
 					<img src="assets/img/kominfo.png" alt="navbar brand" class="navbar-brand" width="65" height="auto">
 				</a>		
-				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="#sidebar" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon">
 						<i class="fa fa-bars"></i>
 					</span>
@@ -57,7 +57,7 @@
 		</div>
 
 		<!-- Sidebar -->
-		<div class="sidebar">
+		<div class="sidebar" id="sidebar">
 			<div class="sidebar-background"></div>
 			<div class="sidebar-wrapper scrollbar-inner">
 				<div class="sidebar-content">
@@ -79,7 +79,7 @@
 					</div>
 					<ul class="nav">
 						<li class="nav-item active">
-							<a href="home">
+							<a href="{{ url('home') }}">
 								<i class="fas fa-home"></i>
 								<p>Dashboard</p>
 							</a>
@@ -99,12 +99,12 @@
 							<div class="collapse" id="base">
 								<ul class="nav nav-collapse">
 									<li>
-										<a href="datauser">
+										<a href="{{ url('datauser') }}">
 											<span class="sub-item">Data User</span>
 										</a>
 									</li>
 									<li>
-										<a href="kategori">
+										<a href="{{ url('kategori') }}">
 											<span class="sub-item">Data Kategori</span>
 										</a>
 									</li>
@@ -140,12 +140,12 @@
 							<div class="collapse" id="submenu">
 								<ul class="nav nav-collapse">
 									<li>
-										<a href="cetak-data-aset">
+										<a href="{{ url('cetak-data-aset') }}">
 											<span class="sub-item">Cetak Data Aset</span>
 										</a>
 									</li>
 									<li>
-										<a href="cetak-qr-code">
+										<a href="{{ url('cetak-qr-code') }}">
 											<span class="sub-item">Cetak QR Code</span>
 										</a>
 									</li>
@@ -220,7 +220,6 @@
 												<i class="flaticon-users"></i>
 											</div>
 										</div>
-										<div class="col col-stats ml-3 ml-sm-0">
 											<div class="numbers">
 												<p class="card-category">Transaksi Peminjaman</p>
 											</div>
@@ -258,67 +257,89 @@
 						  </div>
 						</div>
 					  </div>
-	<script>
-    var dataAsetMasuk = @json($dataAsetMasuk);
-    var dataAsetKeluar = @json($dataAsetKeluar);
-    var tanggal = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-
-    // Mengisi data untuk chart
-    var dataMasuk = tanggal.map(month => dataAsetMasuk[month] || 0);
-    var dataKeluar = tanggal.map(month => dataAsetKeluar[month] || 0);
-
-    var ctxBar = document.getElementById('barChart').getContext('2d');
-    var barChart = new Chart(ctxBar, {
-        type: 'bar',
-        data: {
-            labels: tanggal,
-            datasets: [{
-                label: 'Aset Masuk',
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1,
-                data: dataMasuk
-            }, {
-                label: 'Aset Keluar',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1,
-                data: dataKeluar
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-
-    var totalAsetMasuk = dataMasuk.reduce((a, b) => a + b, 0);
-    var totalAsetKeluar = dataKeluar.reduce((a, b) => a + b, 0);
-
-    var ctxPie = document.getElementById('pieChart').getContext('2d');
-    var pieChart = new Chart(ctxPie, {
-        type: 'pie',
-        data: {
-            labels: ['Aset Masuk', 'Aset Keluar'],
-            datasets: [{
-                label: 'Persentase',
-                backgroundColor: ['rgba(54, 162, 235, 0.5)', 'rgba(255, 99, 132, 0.5)'],
-                borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
-                borderWidth: 1,
-                data: [totalAsetMasuk, totalAsetKeluar]
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
-</script>
+					  <script>
+						var dataAsetMasuk = @json($dataAsetMasuk);
+						var dataAsetKeluar = @json($dataAsetKeluar);
+						var tanggal = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+					
+						// Mengisi data untuk chart
+						var dataMasuk = tanggal.map(month => dataAsetMasuk[month] || 0);
+						var dataKeluar = tanggal.map(month => dataAsetKeluar[month] || 0);
+					
+						var ctxBar = document.getElementById('barChart').getContext('2d');
+						var barChart = new Chart(ctxBar, {
+							type: 'bar',
+							data: {
+								labels: tanggal,
+								datasets: [{
+									label: 'Aset Masuk',
+									backgroundColor: 'rgba(54, 162, 235, 0.5)',
+									borderColor: 'rgba(54, 162, 235, 1)',
+									borderWidth: 1,
+									data: dataMasuk
+								}, {
+									label: 'Aset Keluar',
+									backgroundColor: 'rgba(255, 99, 132, 0.5)',
+									borderColor: 'rgba(255, 99, 132, 1)',
+									borderWidth: 1,
+									data: dataKeluar
+								}]
+							},
+							options: {
+								scales: {
+									yAxes: [{
+										ticks: {
+											beginAtZero: true
+										}
+									}]
+								}
+							}
+						});
+					
+						var totalAsetMasuk = dataMasuk.reduce((a, b) => a + b, 0);
+						var totalAsetKeluar = dataKeluar.reduce((a, b) => a + b, 0);
+					
+						var ctxPie = document.getElementById('pieChart').getContext('2d');
+						var pieChart = new Chart(ctxPie, {
+							type: 'pie',
+							data: {
+								labels: ['Aset Masuk', 'Aset Keluar'],
+								datasets: [{
+									label: 'Persentase',
+									backgroundColor: ['rgba(54, 162, 235, 0.5)', 'rgba(255, 99, 132, 0.5)'],
+									borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
+									borderWidth: 1,
+									data: [totalAsetMasuk, totalAsetKeluar]
+								}]
+							},
+							options: {
+								responsive: true,
+								maintainAspectRatio: false
+							}
+						});
+					
+						// Fungsi untuk memperbarui data chart
+						function updateChartData(newDataAsetMasuk, newDataAsetKeluar) {
+							var newDataMasuk = tanggal.map(month => newDataAsetMasuk[month] || 0);
+							var newDataKeluar = tanggal.map(month => newDataAsetKeluar[month] || 0);
+					
+							// Update data untuk barChart
+							barChart.data.datasets[0].data = newDataMasuk;
+							barChart.data.datasets[1].data = newDataKeluar;
+							barChart.update();
+					
+							// Update data untuk pieChart
+							var newTotalAsetMasuk = newDataMasuk.reduce((a, b) => a + b, 0);
+							var newTotalAsetKeluar = newDataKeluar.reduce((a, b) => a + b, 0);
+							pieChart.data.datasets[0].data = [newTotalAsetMasuk, newTotalAsetKeluar];
+							pieChart.update();
+						}
+					
+						// Panggil fungsi updateChartData saat data berubah
+						// Misalnya, setelah mengambil kembali data dari server atau mengupdate data
+						// Contoh: updateChartData(newDataAsetMasuk, newDataAsetKeluar);
+					</script>
+					
 
 					
 									</div>
@@ -391,8 +412,4 @@
 	@endif
 
 </body>
-</html>
-</html>
-</html>
-</html>
 </html>

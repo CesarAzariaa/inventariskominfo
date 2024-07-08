@@ -13,14 +13,18 @@ use Endroid\QrCode\Writer\PngWriter;
 class CetakQrController extends Controller
 {
     public function cetak_qr() 
-    {
-        $data_aset = Data_aset::with('kategori')->get();
-        $data_kategori = Kategori::all();
+{
+    $data_aset = Data_aset::with('kategori')->get();
+    $data_kategori = Kategori::all();
     
-        return view('cetak-qr-code', compact('data_aset','data_kategori'));
-    }
+    // Log data untuk debugging
+    Log::info('Data Aset:', $data_aset->toArray());
+    
+    return view('cetak-qr-code', compact('data_aset','data_kategori'));
+}
 
-    public function cetak_qr_pdf(Request $request) 
+
+public function cetak_qr_pdf(Request $request) 
 {
     $kategori_id = $request->input('kategori_id');
     $data_aset = Data_aset::with('kategori')
@@ -33,16 +37,13 @@ class CetakQrController extends Controller
     // Log data untuk debugging
     Log::info('Data Aset:', $data_aset->toArray());
 
-    // Cek apakah data aset tersedia
     if ($data_aset->isEmpty()) {
         return redirect()->back()->with('error', 'Tidak ada data yang sesuai dengan filter yang dipilih.');
     }
 
-    // Inisialisasi Mpdf
     try {
         $mpdf = new Mpdf();
 
-        // Tambahkan CSS untuk styling
         $stylesheet = '
         <style>
             body {
@@ -80,13 +81,11 @@ class CetakQrController extends Controller
         ';
         $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
 
-        // Buat konten HTML untuk PDF
         foreach ($data_aset as $nama_aset => $assets) {
             $html = '<h1>Qr Code Data Aset - ' . $nama_aset . '</h1>';
             $html .= '<div class="card-container">';
 
             foreach ($assets as $aset) {
-                // Generate QR code as base64 image
                 $result = Builder::create()
                     ->writer(new PngWriter())
                     ->data($aset->barcode)
@@ -94,15 +93,15 @@ class CetakQrController extends Controller
                 
                 $qrcode = base64_encode($result->getString());
 
-                // Generate cards based on the stock
                 for ($i = 0; $i < $aset->stok; $i++) {
                     $html .= '<div class="card">
-                                <img src="' . public_path('assets/img/kominfo.png') . '" alt="Logo" />  <!-- Ganti dengan jalur logo yang benar -->
+                                <img src="' . asset('assets/img/kominfo.png') . '" alt="Logo" />
                                 <div class="content">
                                     <p>Nama: ' . $aset->nama_aset . '</p>
                                     <p>Kategori: ' . $aset->kategori->nama_kategori . '</p>
                                     <p>Merk: ' . $aset->merk . '</p>
                                     <p>Model: ' . $aset->model . '</p>
+                                    <p>Merk: ' . $aset->status . '</p>
                                 </div>
                                 <div class="qr-code">
                                     <img src="data:image/png;base64,' . $qrcode . '" alt="QR Code"/>
@@ -112,22 +111,18 @@ class CetakQrController extends Controller
             }
 
             $html .= '</div>';
-            // Tulis HTML ke PDF
             $mpdf->AddPage();
             $mpdf->WriteHTML($html, \Mpdf\HTMLParserMode::HTML_BODY);
         }
 
-        // Tambahkan header dan footer
         $mpdf->SetHTMLHeader('<div style="text-align: right;">Data Aset</div>');
         $mpdf->SetHTMLFooter('<div style="text-align: center;">{PAGENO}</div>');
 
-        // Output PDF ke browser
         $mpdf->Output('data-aset.pdf', 'I');
     } catch (\Mpdf\MpdfException $e) {
         Log::error('Mpdf error: ' . $e->getMessage());
         return response()->json(['error' => 'PDF generation failed.'], 500);
     }
 }
-
 
 }

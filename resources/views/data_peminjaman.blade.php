@@ -26,81 +26,92 @@
                     <div class="card-title">Form Peminjaman Aset</div>
                 </div>
                 <div class="card-body">
-                    <!-- Informasi Peminjam -->
-                    <h2>Informasi Peminjam</h2>
-                    <div class="form-group">
-                        <label for="namaPeminjam">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="namaPeminjam" placeholder="Ketik Nama Anda..">
-                    </div>
-                    <div class="form-group">
-                        <label for="instansi">Asal Instansi/Perusahaan</label>
-                        <input type="text" class="form-control" id="instansi" placeholder="Ketik Asal Instansi Anda..">
-                    </div>
-                    <div class="form-group">
-                        <label for="no_hp">No Handphone</label>
-                        <input type="text" class="form-control" id="no_hp" placeholder="Masukkan No Handphone Anda">
-                    </div>
+                    <!-- Form Peminjaman -->
+                    <form action="{{ route('peminjaman.store') }}" method="POST">
+                        @csrf
+                        <!-- Informasi Peminjam -->
+                        <h2>Informasi Peminjam</h2>
+                        <div class="form-group">
+                            <label for="nama">Nama Lengkap</label>
+                            <input type="text" class="form-control" id="nama" name="nama" value="{{ $user->nama }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="asal_instansi">Asal Instansi/Perusahaan</label>
+                            <input type="text" class="form-control" id="asal_instansi" name="asal_instansi" value="{{ $user->asal_instansi }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="no_handphone">No Handphone</label>
+                            <input type="text" class="form-control" id="no_handphone" name="no_handphone" value="{{ $user->no_handphone }}" readonly>
+                        </div>
 
-                    <hr> <!-- Garis Pembatas -->
+                        <hr> <!-- Garis Pembatas -->
 
-                    <!-- Informasi Aset -->
-                    <h2>Informasi Aset</h2>
-                    <div class="image-container" style="text-align: center; margin: 20px;">
-                        <img src="default-image.jpg" id="assetImage" alt="Asset Image">
-                    </div>
-                    <div class="form-group">
-                        <label for="squareSelect">Pilih Kategori</label>
-                        <select class="form-control" id="squareSelect">
-                            <option>Laptop</option>
-                            <option>Printer</option>
-                            <option>Proyektor</option>
-                            <option>Kamera</option>
-                            <option>Perangkat Lainnya</option>
-                        </select>
-                    </div>
+                        <!-- Informasi Aset -->
+                        <h2>Informasi Aset</h2>
+                        <div class="form-group">
+                            <label for="namaAset">Jenis Aset</label>
+                            <select class="form-control" id="namaAset" name="data_aset_id" onchange="updateOptions()">
+                                <option value="" disabled selected>Pilih Jenis Aset</option>
+                                @php
+                                    $uniqueAses = [];
+                                @endphp
+                                @foreach($data_asets as $aset)
+                                    @if (!isset($uniqueAses[$aset->nama_aset]))
+                                        @php
+                                            $uniqueAses[$aset->nama_aset] = true;
+                                        @endphp
+                                        <option value="{{ $aset->id }}" data-merk="{{ $aset->merk }}" data-model="{{ $aset->model }}" data-kategori="{{ $aset->kategori->nama_kategori }}" data-stok="{{ $aset->stok }}">{{ $aset->nama_aset }}</option>
+                                    @endif
+                                @endforeach
+                            </select>                                                       
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="kategoriAset">Kategori Aset</label>
+                            <input type="text" class="form-control" id="kategoriAset" readonly>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="merk">Merk</label>
-                        <input type="text" class="form-control" id="merk" placeholder="Ketik Merk Aset..">
-                    </div>
+                        <div class="form-group">
+                            <label for="merk">Merk</label>
+                            <select class="form-control" id="merk" name="merk" disabled>
+                                <option value="" disabled selected>Pilih Merk</option>
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="namaAset">Nama Aset</label>
-                        <select class="form-control" id="namaAset" onchange="changeImage(this.value)">
-                            <option value="image1">Nama Aset 1</option>
-                            <option value="image2">Nama Aset 2</option>
-                            <option value="image3">Nama Aset 3</option>
-                            <option value="image4">Nama Aset 4</option>
-                            <option value="image5">Nama Aset 5</option>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <label for="model">Model</label>
+                            <select class="form-control" id="model" name="model" disabled>
+                                <option value="" disabled selected>Pilih Model</option>
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label>Stok</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" name="stok" placeholder="" required>
-                            <div class="input-group-append">
-                                <span class="input-group-text">Pcs</span>
+                        <div class="form-group">
+                            <label>Stok</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="stok" name="stok" placeholder="" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Pcs</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <hr> <!-- Garis Pembatas -->
+                        <hr> <!-- Garis Pembatas -->
 
-                    <!-- Detail Peminjaman -->
-                    <h2>Detail Peminjaman</h2>
-                    <div class="form-group">
-                        <label for="tanggalPeminjaman">Tanggal Peminjaman</label>
-                        <input type="date" class="form-control" id="tanggalPeminjaman">
-                    </div>
-                    <div class="form-group">
-                        <label for="tanggalPengembalian">Tanggal Pengembalian</label>
-                        <input type="date" class="form-control" id="tanggalPengembalian">
-                    </div>									
-                </div>
-                <div class="card-action">
-                    <button class="btn btn-success">Submit</button>
-                    <button class="btn btn-danger">Cancel</button>
+                        <!-- Detail Peminjaman -->
+                        <h2>Detail Peminjaman</h2>
+                        <div class="form-group">
+                            <label for="tanggalPeminjaman">Tanggal Peminjaman</label>
+                            <input type="date" class="form-control" id="tanggalPeminjaman" name="tgl_pinjam">
+                        </div>
+                        <div class="form-group">
+                            <label for="tanggalPengembalian">Tanggal Pengembalian</label>
+                            <input type="date" class="form-control" id="tanggalPengembalian" name="tgl_kembali">
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="reset" class="btn btn-danger">Cancel</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -108,10 +119,79 @@
 </div>
 
 <script>
-    function changeImage(imageValue) {
-        var imageUrl = imageValue + '.jpg .png';
-        document.getElementById('assetImage').src = imageUrl;
-    }
+    // Ambil elemen select jenis aset
+    var jenisAsetSelect = document.getElementById('namaAset');
+    // Ambil elemen input kategori aset
+    var kategoriAsetInput = document.getElementById('kategoriAset');
+    // Ambil elemen select merk
+    var merkSelect = document.getElementById('merk');
+    // Ambil elemen select model
+    var modelSelect = document.getElementById('model');
+    // Ambil elemen input stok
+    var stokInput = document.getElementById('stok');
+
+    // Daftar opsi merk, model, kategori, dan stok untuk setiap jenis aset
+    var options = {
+        @foreach($data_asets as $aset)
+            '{{ $aset->id }}': {
+                merk: '{{ $aset->merk }}',
+                model: '{{ $aset->model }}',
+                kategori: '{{ $aset->kategori->nama_kategori }}',
+                stok: '{{ $aset->stok }}'
+            },
+        @endforeach
+    };
+
+    // Fungsi untuk memperbarui pilihan kategori, merk, model, dan stok berdasarkan jenis aset yang dipilih
+    // Fungsi untuk memperbarui pilihan kategori, merk, model, dan stok berdasarkan jenis aset yang dipilih
+    function updateOptions() {
+    var jenisAsetId = jenisAsetSelect.value;
+    var selectedOptions = options[jenisAsetId];
+
+    // Update nilai kategori aset
+    kategoriAsetInput.value = selectedOptions.kategori;
+
+    // Kosongkan opsi merk terlebih dahulu
+    merkSelect.innerHTML = '';
+    // Tambahkan opsi default
+    var defaultMerkOption = document.createElement('option');
+    defaultMerkOption.textContent = 'Pilih Merk Aset';
+    merkSelect.appendChild(defaultMerkOption);
+
+    // Tambahkan opsi merk berdasarkan jenis aset yang dipilih
+    var merkOption = document.createElement('option');
+    merkOption.textContent = selectedOptions.merk;
+    merkOption.value = selectedOptions.merk;
+    merkSelect.appendChild(merkOption);
+
+    // Kosongkan opsi model terlebih dahulu
+    modelSelect.innerHTML = '';
+    // Tambahkan opsi default
+    var defaultModelOption = document.createElement('option');
+    defaultModelOption.textContent = 'Pilih Model Aset';
+    modelSelect.appendChild(defaultModelOption);
+
+    // Tambahkan opsi model berdasarkan jenis aset yang dipilih
+    var modelOption = document.createElement('option');
+    modelOption.textContent = selectedOptions.model;
+    modelOption.value = selectedOptions.model;
+    modelSelect.appendChild(modelOption);
+
+    // Update nilai stok dan aktifkan input
+    stokInput.value = selectedOptions.stok;
+    stokInput.removeAttribute('readonly'); // Menghapus atribut readonly
+
+    // Aktifkan kembali dropdown merk dan model
+    merkSelect.disabled = false;
+    modelSelect.disabled = false;
+}
+
+// Panggil fungsi updateOptions() saat jenis aset dipilih
+jenisAsetSelect.addEventListener('change', updateOptions);
+
+// Panggil fungsi updateOptions() untuk memuat opsi merk, model, dan stok awal saat halaman dimuat
+updateOptions();
+
 </script>
 
 @endsection

@@ -32,10 +32,12 @@
                             <div class="d-flex align-items-center">
                                 <h4 class="card-title">Cetak Data Aset</h4>
                             </div>
-                            <form id="cetak-form" action="{{ route('data-aset-pdf') }}" method="GET">
+                            <form id="cetak-form" action="{{ route('data-aset.pdf') }}" method="POST">
+                                @csrf
                                 <div class="form-group">
                                     <label for="filter-kategori">Pilih Kategori</label>
                                     <select id="filter-kategori" name="kategori_id" class="form-control">
+                                        <option value="">Pilih sesuai kebutuhan</option>
                                         <option value="">Semua</option>
                                         @foreach ($data_kategori as $kat)
                                             <option value="{{ $kat->id }}">{{ $kat->nama_kategori }}</option>
@@ -45,6 +47,7 @@
                                 <div class="form-group">
                                     <label for="filter-status">Pilih Status</label>
                                     <select id="filter-status" name="status" class="form-control">
+                                        <option value="">Pilih sesuai kebutuhan</option>
                                         <option value="">Semua</option>
                                         <option value="tersedia">Tersedia</option>
                                         <option value="terpakai">Terpakai</option>
@@ -52,16 +55,21 @@
                                         <option value="rusak">Rusak</option>
                                     </select>
                                 </div>
+                                <div class="form-group">
+                                    <label for="filter-bulan">Pilih Bulan</label>
+                                    <input type="month" id="filter-bulan" name="bulan" class="form-control" placeholder="Pilih sesuai kebutuhan">
+                                </div>
                                 <div class="form-group text-left">
                                     <button type="button" id="cetak-button" class="btn btn-primary">Cetak PDF</button>
                                 </div>
-                            </form>
+                            </form>                                                  
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table id="add-row" class="display table table-striped table-hover">
                                     <thead>
                                         <tr>
+                                            <th><input type="checkbox" id="select-all-checkbox"></th>
                                             <th>No</th>
                                             <th>Nama Aset</th>
                                             <th>Kategori</th>
@@ -74,7 +82,8 @@
                                     <tbody>
                                         @php $no=1 @endphp
                                         @foreach ($data_aset as $row)
-                                            <tr class="aset-row" data-kategori="{{ $row->kategori->nama_kategori }}">
+                                            <tr class="aset-row" data-kategori="{{ $row->kategori->id }}" data-tanggal="{{ $row->tanggal }}">
+                                                <td><input type="checkbox" class="row-checkbox" name="selected_ids[]" value="{{ $row->id }}"></td>
                                                 <td>{{$no++}}</td>
                                                 <td>{{$row->nama_aset}}</td>
                                                 <td>{{$row->kategori->nama_kategori}}</td>
@@ -97,17 +106,33 @@
 
 <script>
     function filterRows() {
-        var kategori = document.getElementById('filter-kategori').options[document.getElementById('filter-kategori').selectedIndex].text;
+        var kategori = document.getElementById('filter-kategori').value;
         var status = document.getElementById('filter-status').value;
+        var bulan = document.getElementById('filter-bulan').value;
         
         var rows = document.querySelectorAll('.aset-row');
         var dataAvailable = false;
 
         rows.forEach(function(row) {
             var rowKategori = row.getAttribute('data-kategori');
-            var rowStatus = row.querySelector('td:nth-child(6)').innerText.toLowerCase();
+            var rowStatus = row.querySelector('td:nth-child(7)').innerText.toLowerCase();
+            var rowTanggal = row.getAttribute('data-tanggal').substring(0, 7);
 
-            if ((kategori === "Semua" || rowKategori === kategori) && (status === "" || rowStatus === status)) {
+            var showRow = true;
+
+            if (kategori && kategori !== "Pilih sesuai kebutuhan" && kategori !== "Semua" && rowKategori != kategori) {
+                showRow = false;
+            }
+
+            if (status && status !== "Pilih sesuai kebutuhan" && rowStatus !== status) {
+                showRow = false;
+            }
+
+            if (bulan && rowTanggal !== bulan) {
+                showRow = false;
+            }
+
+            if (showRow) {
                 row.style.display = "";
                 dataAvailable = true;
             } else {
@@ -120,19 +145,44 @@
 
     document.getElementById('filter-kategori').addEventListener('change', filterRows);
     document.getElementById('filter-status').addEventListener('change', filterRows);
+    document.getElementById('filter-bulan').addEventListener('change', filterRows);
+
+    document.getElementById('select-all-checkbox').addEventListener('change', function() {
+        var isChecked = this.checked;
+        var checkboxes = document.querySelectorAll('.row-checkbox');
+        checkboxes.forEach(function(checkbox) {
+            checkbox.checked = isChecked;
+        });
+    });
 
     document.getElementById('cetak-button').addEventListener('click', function() {
-        var dataAvailable = filterRows();
+    var kategori = document.getElementById('filter-kategori').value;
+    var status = document.getElementById('filter-status').value;
+    var bulan = document.getElementById('filter-bulan').value;
 
-        if (dataAvailable) {
-            document.getElementById('cetak-form').submit();
-        } else {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Data Tidak Tersedia',
-                text: 'Tidak ada data yang sesuai dengan filter yang dipilih.'
-            });
-        }
-    });
+    var form = document.getElementById('cetak-form');
+
+    // Set nilai filter ke dalam input tersembunyi
+    var inputKategori = document.createElement('input');
+    inputKategori.type = 'hidden';
+    inputKategori.name = 'kategori_id';
+    inputKategori.value = kategori;
+    form.appendChild(inputKategori);
+
+    var inputStatus = document.createElement('input');
+    inputStatus.type = 'hidden';
+    inputStatus.name = 'status';
+    inputStatus.value = status;
+    form.appendChild(inputStatus);
+
+    var inputBulan = document.createElement('input');
+    inputBulan.type = 'hidden';
+    inputBulan.name = 'bulan';
+    inputBulan.value = bulan;
+    form.appendChild(inputBulan);
+
+    form.submit();
+});
+
 </script>
 @endsection

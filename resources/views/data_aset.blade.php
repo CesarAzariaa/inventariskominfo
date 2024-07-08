@@ -93,17 +93,17 @@
                                                                 <label>Kategori</label>
                                                                 <input type="text" class="form-control" value="{{$row->nama_kategori}}" readonly>
                                                             </div>
+
+                                                            <div class="form-group">
+                                                                <label>Merk</label>
+                                                                <input type="text" class="form-control" value="{{$row->merk}}" readonly>
+                                                            </div>
                                             
                                                             <div class="form-group">
                                                                 <label>Model</label>
                                                                 <input type="text" class="form-control" value="{{$row->model}}" readonly>
                                                             </div>
                                             
-                                                            <div class="form-group">
-                                                                <label>Merk</label>
-                                                                <input type="text" class="form-control" value="{{$row->merk}}" readonly>
-                                                            </div>
-
                                                             <div class="form-group">
                                                                 <label>Stok</label>
                                                                 <input type="text" class="form-control" value="{{$row->stok}} Pcs" readonly>
@@ -172,13 +172,13 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Model</label>
-                        <input type="text" class="form-control" name="model" placeholder="" required>
+                        <label>Merk</label>
+                        <input type="text" class="form-control" name="merk" placeholder="" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Merk</label>
-                        <input type="text" class="form-control" name="merk" placeholder="" required>
+                        <label>Model</label>
+                        <input type="text" class="form-control" name="model" placeholder="" required>
                     </div>
 
                     <div class="form-group">
@@ -252,17 +252,17 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        <div class="form-group">
+                            <label>Merk</label>
+                            <input type="text" class="form-control" value="{{$d->merk}}" name="merk" placeholder="" required>
+                        </div>
     
                         <div class="form-group">
                             <label>Model</label>
                             <input type="text" class="form-control" value="{{$d->model}}" name="model" placeholder="" required>
                         </div>
-    
-                        <div class="form-group">
-                            <label>Merk</label>
-                            <input type="text" class="form-control" value="{{$d->merk}}" name="merk" placeholder="" required>
-                        </div>
-                            
+        
                         <div class="form-group">
                             <label>Stok</label>
                             <div class="input-group">

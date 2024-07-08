@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('role',['admin','user'])->default('user');
             $table->string('no_handphone');
             $table->string('asal_instansi');
+            $table->string('chat_id')->nullable()->default(null);
             $table->rememberToken();
             $table->timestamps();
         });

@@ -21,7 +21,7 @@ class HomeController extends Controller
                 $data_aset = Data_aset::all();
                 $data_user = User::all();
                 
-                // Mengumpulkan data untuk chart berdasarkan bulan dan tahun dengan memastikan semua bulan ditampilkan
+                // Query untuk mengambil data aset masuk dan keluar berdasarkan bulan
                 $chart_data = \DB::table(\DB::raw('(
                     SELECT 1 AS bulan UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6
                     UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12
@@ -37,15 +37,14 @@ class HomeController extends Controller
                 ->orderBy('months.bulan')
                 ->get();
 
-                // Menambahkan data aset tersedia dan terpakai, serta dipinjam dan rusak
-                $data_aset_tersedia_terpakai = \App\Models\Data_aset::whereIn('status', ['tersedia', 'terpakai'])->get();
-                $data_aset_dipinjam_rusak = \App\Models\Data_aset::whereIn('status', ['dipinjam', 'rusak'])->get();
-
-                // Menghitung jumlah data aset berdasarkan bulan
+                // Query untuk menghitung data aset masuk
+                $data_aset_tersedia_terpakai = Data_aset::whereIn('status', ['tersedia', 'terpakai'])->get();
                 $dataAsetMasuk = $data_aset_tersedia_terpakai->groupBy(function($date) {
                     return \Carbon\Carbon::parse($date->tanggal)->format('M'); // grouping by months
                 })->map->count();
 
+                // Query untuk menghitung data aset keluar
+                $data_aset_dipinjam_rusak = Data_aset::whereIn('status', ['dipinjam', 'rusak'])->get();
                 $dataAsetKeluar = $data_aset_dipinjam_rusak->groupBy(function($date) {
                     return \Carbon\Carbon::parse($date->tanggal)->format('M'); // grouping by months
                 })->map->count();
@@ -65,3 +64,4 @@ class HomeController extends Controller
         }
     }
 }
+

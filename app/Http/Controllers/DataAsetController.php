@@ -104,15 +104,21 @@ class DataAsetController extends Controller
 
         $input = $validatedData;
 
-        // Cek apakah ada perubahan pada status, stok, atau tanggal
-        $isChanged = $input['status'] != $data_aset->status || $input['tanggal'] != $data_aset->tanggal;
+        // Cek apakah ada perubahan pada stok, status, dan tanggal
+        $isStatusChanged = $input['status'] != $data_aset->status;
+        $isStokChanged = $input['stok'] != $data_aset->stok;
+        $isTanggalChanged = $input['tanggal'] != $data_aset->tanggal;
 
-        if ($isChanged) {
+        // Duplikasi data jika stok, status, dan tanggal berubah secara bersamaan
+        if ($isStatusChanged && $isStokChanged && $isTanggalChanged) {
             // Buat duplikat data aset yang sudah ada dengan status, tanggal, dan stok yang baru
             $newDataAset = $data_aset->replicate();
             $newDataAset->status = $input['status'];
             $newDataAset->tanggal = $input['tanggal'];
             $newDataAset->stok = $input['stok'];
+
+            // Salin path QR code lama
+            $newDataAset->barcode = $data_aset->barcode;
 
             // Simpan duplikat sebagai data baru
             $newDataAset->save();
@@ -121,45 +127,28 @@ class DataAsetController extends Controller
             $data_aset->stok -= $input['stok'];
             $data_aset->save();
         } else {
-            // Jika tidak ada perubahan pada status dan tanggal, hanya update data aset yang sudah ada
-            if ($input['stok'] != $data_aset->stok) {
-                // Hitung selisih stok
-                $stokSelisih = $data_aset->stok - $input['stok'];
-
-                // Buat duplikat data aset yang sudah ada dengan stok yang baru
-                $newDataAset = $data_aset->replicate();
-                $newDataAset->stok = $input['stok'];
-
-                // Simpan duplikat sebagai data baru
-                $newDataAset->save();
-
-                // Kurangi stok dari data aset yang sudah ada
-                $data_aset->stok -= $stokSelisih;
-                $data_aset->save();
-            } else {
-                // Jika tidak ada perubahan pada stok, hanya update data aset yang sudah ada
-                if ($request->hasFile('nama_file')) {
-                    if ($data_aset->nama_file) {
-                        $oldPath = 'gambar_aset/' . $data_aset->nama_file;
-                        if (Storage::disk('public')->exists($oldPath)) {
-                            Storage::disk('public')->delete($oldPath);
-                        }
+            // Jika tidak ada perubahan pada status dan stok, hanya update data aset yang sudah ada
+            if ($request->hasFile('nama_file')) {
+                if ($data_aset->nama_file) {
+                    $oldPath = 'gambar_aset/' . $data_aset->nama_file;
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
                     }
-
-                    $photo = $request->file('nama_file');
-                    $nama_gambar = date('Y-m-d-His') . '-' . $photo->getClientOriginalName(); // Menambahkan timestamp lebih detail
-                    $path = 'gambar_aset/' . $nama_gambar;
-
-                    // Simpan gambar baru ke dalam storage
-                    Storage::disk('public')->put($path, file_get_contents($photo));
-
-                    // Simpan nama file yang baru diupdate ke dalam input
-                    $input['nama_file'] = $nama_gambar;
                 }
 
-                // Update data aset yang sudah ada
-                $data_aset->update($input);
+                $photo = $request->file('nama_file');
+                $nama_gambar = date('Y-m-d-His') . '-' . $photo->getClientOriginalName(); // Menambahkan timestamp lebih detail
+                $path = 'gambar_aset/' . $nama_gambar;
+
+                // Simpan gambar baru ke dalam storage
+                Storage::disk('public')->put($path, file_get_contents($photo));
+
+                // Simpan nama file yang baru diupdate ke dalam input
+                $input['nama_file'] = $nama_gambar;
             }
+
+            // Update data aset yang sudah ada
+            $data_aset->update($input);
         }
 
         // Tambahkan log untuk melihat data aset setelah update
@@ -170,7 +159,6 @@ class DataAsetController extends Controller
         return redirect()->route('data_aset')->with('error', 'Gagal memperbarui data aset: ' . $e->getMessage());
     }
 }
-
 
 
     public function destroy($id)
