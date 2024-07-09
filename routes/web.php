@@ -12,6 +12,7 @@ use App\Http\Controllers\AsetKeluarController;
 use App\Http\Controllers\DataPeminjamanController;
 use App\Http\Controllers\CetakAsetController;
 use App\Http\Controllers\CetakQrController;
+use App\Http\Controllers\PeminjamanAdminController;
 
 //Landing Page & Dashboard
 Route::get('/', [HomeController::class, 'index'])->name('landingpage');
@@ -49,9 +50,13 @@ Route::get('/aset_user', [AsetUserController::class, 'aset_user'])->name('aset_u
 
 //Data Peminjaman
 Route::middleware(['auth'])->group(function () {
-Route::get('/data_peminjaman', [DataPeminjamanController::class, 'data_peminjaman'])->name('data_peminjaman');
-Route::post('/peminjaman', [DataPeminjamanController::class, 'store'])->name('peminjaman.store');
+    Route::get('/data_peminjaman', [DataPeminjamanController::class, 'index'])->name('data_peminjaman.index');
+    Route::post('/data_peminjaman/store', [DataPeminjamanController::class, 'store'])->name('data_peminjaman.store');
 });
+//Peminjaman Admin
+Route::get('/peminjaman-admin', [PeminjamanAdminController::class, 'peminjaman_admin'])->name('peminjaman-admin')->middleware('auth');
+Route::put('/peminjaman/update/{id}', [PeminjamanAdminController::class, 'update'])->name('peminjaman.update')->middleware('auth');
+Route::delete('/peminjaman/destroy/{id}', [PeminjamanAdminController::class, 'destroy'])->name('peminjaman.destroy')->middleware('auth');
 
 //Data Aset Keluar
 Route::get('/aset_keluar', [AsetKeluarController::class, 'aset_keluar'])->name('aset_keluar')->middleware('auth');
@@ -69,7 +74,3 @@ Route::get('/qr-code-pdf', [CetakQrController::class, 'cetak_qr_pdf'])->name('qr
 
 //Detail Qr Code
 Route::get('/data-aset/{id}', [DataAsetController::class, 'show'])->name('detail.data_aset');
-
-
-
-

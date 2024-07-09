@@ -126,11 +126,12 @@
 						</li>
 
 						<li class="nav-item">
-							<a data-toggle="collapse" href="#users">
+							<a href="{{ route('peminjaman-admin') }}">
 								<i class="fas fa-users"></i>
 								<p>Transaksi Peminjaman Aset</p>
 							</a>
 						</li>
+						
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#submenu">
 								<i class="fa fa-print"></i>

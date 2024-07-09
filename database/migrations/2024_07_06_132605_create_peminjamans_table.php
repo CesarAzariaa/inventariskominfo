@@ -15,7 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('data_aset_id');
             $table->date('tgl_pinjam');
             $table->date('tgl_kembali');
-            $table->enum('status_peminjaman', ['diterima', 'ditolak','pending'])->default('pending');
+            $table->enum('status_peminjaman', ['diterima','pending'])->default('pending');
             $table->timestamps();
         
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

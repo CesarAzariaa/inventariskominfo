@@ -98,7 +98,7 @@
 								</a>
 							</li>
 		
-							<li class="nav-item {{ request()->is('data_peminjaman') ? 'active' : '' }}">
+							<li class="nav-item {{ request()->is('data_peminjaman.index') ? 'active' : '' }}">
 								<a href="{{ 'data_peminjaman' }}">
 									<i class="fas fa-address-book"></i>
 									<p>Peminjaman Aset</p>

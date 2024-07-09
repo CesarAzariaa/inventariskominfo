@@ -100,7 +100,7 @@
 						</li>
 
 						<li class="nav-item">
-							<a href="{{ route('data_peminjaman') }}">
+							<a href="{{ route('data_peminjaman.index') }}">
 								<i class="fas fa-address-book"></i>
 								<p>Data Peminjaman</p>
 							</a>

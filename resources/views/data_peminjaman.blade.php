@@ -1,7 +1,6 @@
 @extends('layout.layoutUser')
 
 @section('content')
-
 <div class="main-panel">
     <div class="content">
         <div class="page-inner">
@@ -27,7 +26,7 @@
                 </div>
                 <div class="card-body">
                     <!-- Form Peminjaman -->
-                    <form action="{{ route('peminjaman.store') }}" method="POST">
+                    <form action="{{ route('data_peminjaman.store') }}" method="POST">
                         @csrf
                         <!-- Informasi Peminjam -->
                         <h2>Informasi Peminjam</h2>
@@ -43,60 +42,55 @@
                             <label for="no_handphone">No Handphone</label>
                             <input type="text" class="form-control" id="no_handphone" name="no_handphone" value="{{ $user->no_handphone }}" readonly>
                         </div>
-
+                    
                         <hr> <!-- Garis Pembatas -->
-
+                    
                         <!-- Informasi Aset -->
                         <h2>Informasi Aset</h2>
                         <div class="form-group">
                             <label for="namaAset">Jenis Aset</label>
-                            <select class="form-control" id="namaAset" name="data_aset_id" onchange="updateOptions()">
+                            <select class="form-control" id="namaAset" name="nama_aset" onchange="updateOptions()">
                                 <option value="" disabled selected>Pilih Jenis Aset</option>
-                                @php
-                                    $uniqueAses = [];
-                                @endphp
-                                @foreach($data_asets as $aset)
-                                    @if (!isset($uniqueAses[$aset->nama_aset]))
-                                        @php
-                                            $uniqueAses[$aset->nama_aset] = true;
-                                        @endphp
-                                        <option value="{{ $aset->id }}" data-merk="{{ $aset->merk }}" data-model="{{ $aset->model }}" data-kategori="{{ $aset->kategori->nama_kategori }}" data-stok="{{ $aset->stok }}">{{ $aset->nama_aset }}</option>
-                                    @endif
+                                @foreach($grouped_data_asets as $nama_aset => $asets)
+                                    <option value="{{ $nama_aset }}">{{ $nama_aset }}</option>
                                 @endforeach
-                            </select>                                                       
+                            </select>
                         </div>
-                        
+                    
                         <div class="form-group">
                             <label for="kategoriAset">Kategori Aset</label>
                             <input type="text" class="form-control" id="kategoriAset" readonly>
                         </div>
-
+                    
                         <div class="form-group">
                             <label for="merk">Merk</label>
-                            <select class="form-control" id="merk" name="merk" disabled>
+                            <select class="form-control" id="merk" name="merk" onchange="updateModelAndStock()" disabled>
                                 <option value="" disabled selected>Pilih Merk</option>
                             </select>
                         </div>
-
+                    
                         <div class="form-group">
                             <label for="model">Model</label>
                             <select class="form-control" id="model" name="model" disabled>
                                 <option value="" disabled selected>Pilih Model</option>
                             </select>
                         </div>
-
+                    
                         <div class="form-group">
                             <label>Stok</label>
                             <div class="input-group">
-                                <input type="number" class="form-control" id="stok" name="stok" placeholder="" required>
+                                <input type="number" class="form-control" id="stok" name="stok" placeholder="">
                                 <div class="input-group-append">
                                     <span class="input-group-text">Pcs</span>
                                 </div>
                             </div>
                         </div>
-
+                    
+                        <!-- Input hidden untuk data_aset_id -->
+                        <input type="hidden" id="data_aset_id" name="data_aset_id">
+                    
                         <hr> <!-- Garis Pembatas -->
-
+                    
                         <!-- Detail Peminjaman -->
                         <h2>Detail Peminjaman</h2>
                         <div class="form-group">
@@ -107,91 +101,104 @@
                             <label for="tanggalPengembalian">Tanggal Pengembalian</label>
                             <input type="date" class="form-control" id="tanggalPengembalian" name="tgl_kembali">
                         </div>
+                        <div class="form-group">
+                            <label for="status_peminjaman">Status Peminjaman</label>
+                            <select class="form-control" id="status_peminjaman" name="status_peminjaman">
+                                <option value="pending">Pending</option>
+                                <option value="diterima">Diterima</option>
+                                <option value="ditolak">Ditolak</option>
+                            </select>
+                        </div>
                         <div class="card-action">
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="submit" class="btn btn-success" id="submitBtn">Submit</button>
                             <button type="reset" class="btn btn-danger">Cancel</button>
                         </div>
                     </form>
+                    
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // Ambil elemen select jenis aset
     var jenisAsetSelect = document.getElementById('namaAset');
-    // Ambil elemen input kategori aset
     var kategoriAsetInput = document.getElementById('kategoriAset');
-    // Ambil elemen select merk
     var merkSelect = document.getElementById('merk');
-    // Ambil elemen select model
     var modelSelect = document.getElementById('model');
-    // Ambil elemen input stok
     var stokInput = document.getElementById('stok');
+    var dataAsetIdInput = document.getElementById('data_aset_id');
 
-    // Daftar opsi merk, model, kategori, dan stok untuk setiap jenis aset
-    var options = {
-        @foreach($data_asets as $aset)
-            '{{ $aset->id }}': {
-                merk: '{{ $aset->merk }}',
-                model: '{{ $aset->model }}',
-                kategori: '{{ $aset->kategori->nama_kategori }}',
-                stok: '{{ $aset->stok }}'
-            },
-        @endforeach
-    };
+    var options = @json($grouped_data_asets);
 
-    // Fungsi untuk memperbarui pilihan kategori, merk, model, dan stok berdasarkan jenis aset yang dipilih
-    // Fungsi untuk memperbarui pilihan kategori, merk, model, dan stok berdasarkan jenis aset yang dipilih
     function updateOptions() {
-    var jenisAsetId = jenisAsetSelect.value;
-    var selectedOptions = options[jenisAsetId];
+        var jenisAset = jenisAsetSelect.value;
+        var asets = options[jenisAset];
 
-    // Update nilai kategori aset
-    kategoriAsetInput.value = selectedOptions.kategori;
+        kategoriAsetInput.value = asets[0].kategori.nama_kategori;
 
-    // Kosongkan opsi merk terlebih dahulu
-    merkSelect.innerHTML = '';
-    // Tambahkan opsi default
-    var defaultMerkOption = document.createElement('option');
-    defaultMerkOption.textContent = 'Pilih Merk Aset';
-    merkSelect.appendChild(defaultMerkOption);
+        merkSelect.innerHTML = '<option value="" disabled selected>Pilih Merk</option>';
+        modelSelect.innerHTML = '<option value="" disabled selected>Pilih Model</option>';
+        stokInput.value = '';
 
-    // Tambahkan opsi merk berdasarkan jenis aset yang dipilih
-    var merkOption = document.createElement('option');
-    merkOption.textContent = selectedOptions.merk;
-    merkOption.value = selectedOptions.merk;
-    merkSelect.appendChild(merkOption);
+        asets.forEach(function(aset) {
+            var merkOption = document.createElement('option');
+            merkOption.value = aset.merk;
+            merkOption.textContent = aset.merk;
+            merkSelect.appendChild(merkOption);
+        });
 
-    // Kosongkan opsi model terlebih dahulu
-    modelSelect.innerHTML = '';
-    // Tambahkan opsi default
-    var defaultModelOption = document.createElement('option');
-    defaultModelOption.textContent = 'Pilih Model Aset';
-    modelSelect.appendChild(defaultModelOption);
+        merkSelect.disabled = false;
+        modelSelect.disabled = true;
+    }
 
-    // Tambahkan opsi model berdasarkan jenis aset yang dipilih
-    var modelOption = document.createElement('option');
-    modelOption.textContent = selectedOptions.model;
-    modelOption.value = selectedOptions.model;
-    modelSelect.appendChild(modelOption);
+    function updateModelAndStock() {
+        var jenisAset = jenisAsetSelect.value;
+        var merk = merkSelect.value;
+        var asets = options[jenisAset].filter(aset => aset.merk === merk);
 
-    // Update nilai stok dan aktifkan input
-    stokInput.value = selectedOptions.stok;
-    stokInput.removeAttribute('readonly'); // Menghapus atribut readonly
+        modelSelect.innerHTML = '<option value="" disabled selected>Pilih Model</option>';
 
-    // Aktifkan kembali dropdown merk dan model
-    merkSelect.disabled = false;
-    modelSelect.disabled = false;
-}
+        asets.forEach(function(aset) {
+            var modelOption = document.createElement('option');
+            modelOption.value = aset.model;
+            modelOption.textContent = aset.model;
+            modelSelect.appendChild(modelOption);
+        });
 
-// Panggil fungsi updateOptions() saat jenis aset dipilih
-jenisAsetSelect.addEventListener('change', updateOptions);
+        stokInput.value = asets.length > 0 ? asets[0].stok : '';
+        modelSelect.disabled = false;
+    }
 
-// Panggil fungsi updateOptions() untuk memuat opsi merk, model, dan stok awal saat halaman dimuat
-updateOptions();
+    jenisAsetSelect.addEventListener('change', updateOptions);
+    merkSelect.addEventListener('change', updateModelAndStock);
 
+    document.addEventListener('DOMContentLoaded', function() {
+        updateOptions();
+    });
+
+    document.getElementById('submitBtn').addEventListener('click', function(event) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Pastikan data yang Anda masukkan sudah benar.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, submit!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Set nilai data_aset_id sebelum submit
+                var jenisAset = jenisAsetSelect.value;
+                dataAsetIdInput.value = options[jenisAset][0].id; // Misalnya ambil ID dari aset pertama
+
+                document.querySelector('form').submit();
+            }
+        });
+    });
 </script>
 
 @endsection

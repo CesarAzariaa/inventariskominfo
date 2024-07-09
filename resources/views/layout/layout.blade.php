@@ -126,8 +126,8 @@
 								</a>
 							</li>
 							
-							<li class="nav-item {{ request()->is('transaksi_peminjaman_aset') ? 'active' : '' }}">
-								<a data-toggle="collapse" href="#users">
+							<li class="nav-item {{ request()->is('peminjaman-admin') ? 'active' : '' }}">
+								<a data-toggle="collapse" href="peminjaman-admin">
 									<i class="fas fa-users"></i>
 									<p>Transaksi Peminjaman Aset</p>
 								</a>

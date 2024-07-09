@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class peminjaman extends Model
+class Peminjaman extends Model
 {
     use HasFactory;
 
@@ -21,11 +21,16 @@ class peminjaman extends Model
     
     public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class);
     }
     public function data_asets()
     {
-        return $this->hasMany(Data_aset::class);
+        return $this->belongsTo(Data_aset::class);
+    }
+    
+    public function getKategoriIdAttribute()
+    {
+        return $this->data_aset->kategori_id;
     }
 
 }

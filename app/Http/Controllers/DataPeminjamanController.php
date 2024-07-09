@@ -3,45 +3,65 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Peminjaman;
 use App\Models\Data_aset;
+use App\Models\Peminjaman;
+use App\Models\Kategori;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DataPeminjamanController extends Controller
 {
-    public function data_peminjaman()
+    public function index()
     {
-        $peminjaman = Peminjaman::with(['user', 'data_aset'])->get();
         $user = Auth::user();
-        
-        // Ambil hanya data aset yang memiliki status "tersedia"
-        $data_asets = Data_aset::with('kategori')
-            ->where('status', 'tersedia')
-            ->get();
 
-        return view('data_peminjaman', compact('peminjaman', 'user', 'data_asets'));
+
+        $data_asets = Data_aset::with('kategori')->get();
+        $grouped_data_asets = $data_asets->groupBy('nama_aset');
+
+        return view('data_peminjaman', compact('user', 'grouped_data_asets'));
     }
 
     public function store(Request $request)
-    {
-        // Validasi data yang dikirimkan
-        $validated = $request->validate([
-            'data_aset_id' => 'required|exists:data_asets,id',
-            'tgl_pinjam' => 'required|date',
-            'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
-            'status_peminjaman' => 'required|in:diterima,ditolak,pending',
+{
+    // Validasi request
+    $request->validate([
+        'nama_aset' => 'required',
+        'tgl_pinjam' => 'required|date',
+        'tgl_kembali' => 'required|date|after:tgl_pinjam',
+        'status_peminjaman' => 'required|in:pending,diterima,ditolak',
+        'stok' => 'required|integer|min:1', // validasi stok yang dipilih
+    ]);
+
+    $user = Auth::user();
+
+    // Mulai transaksi database
+    DB::beginTransaction();
+
+    try {
+        // Simpan data peminjaman
+        $peminjaman = Peminjaman::create([
+            'user_id' => $user->id,
+            'data_aset_id' => $request->data_aset_id,
+            'tgl_pinjam' => $request->tgl_pinjam,
+            'tgl_kembali' => $request->tgl_kembali,
+            'status_peminjaman' => $request->status_peminjaman,
         ]);
 
-        // Ambil kategori_id dari Data_aset yang terkait dengan data_aset_id
-        $data_aset = Data_aset::findOrFail($validated['data_aset_id']);
-        $kategori_id = $data_aset->kategori_id;
+        // Kurangi stok dari aset yang dipilih
+        $aset = Data_aset::findOrFail($request->data_aset_id);
+        $aset->stok -= $request->stok;
+        $aset->save();
 
-        // Simpan data peminjaman dengan user_id dari pengguna yang login
-        $validated['user_id'] = Auth::id();
-        $validated['kategori_id'] = $kategori_id; // Simpan kategori_id ke dalam peminjaman
-        Peminjaman::create($validated);
+        // Commit transaksi jika sukses
+        DB::commit();
 
-        // Redirect atau respon lainnya
-        return redirect()->back()->with('success', 'Peminjaman berhasil ditambahkan');
+        return redirect()->route('data_peminjaman.index')->with('success', 'Peminjaman berhasil dibuat.');
+    } catch (\Exception $e) {
+        // Rollback transaksi jika terjadi kesalahan
+        DB::rollback();
+
+        return redirect()->back()->with('error', 'Gagal membuat peminjaman: ' . $e->getMessage());
     }
+}
 }

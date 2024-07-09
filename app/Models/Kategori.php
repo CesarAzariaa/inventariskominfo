@@ -14,6 +14,9 @@ class Kategori extends Model
         'id', 
         'nama_kategori',
     ];
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
+
+    public function data_asets()
+    {
+        return $this->hasMany(Data_aset::class);
+    }
 }

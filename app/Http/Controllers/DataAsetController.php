@@ -12,19 +12,33 @@ use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use App\Http\Controllers\AsetKeluarController;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Auth;
 
 class DataAsetController extends Controller
 {
-    public function data_aset()
+    public function __construct()
     {
-        $data_aset = Data_aset::join('kategoris', 'data_asets.kategori_id', '=', 'kategoris.id')
-                      ->select('data_asets.*', 'kategoris.nama_kategori as nama_kategori')
-                      ->get();
-        $data = array(
-            'data_kategori' => Kategori::all(),
-            'data_aset'     => $data_aset,
-        );
-        return view('data_aset', $data);
+        $this->middleware('auth');
+    }
+
+    public function data_aset()
+    {   
+        if (Auth::check()) {
+            if (Auth::user()->role == 'admin') {
+                $data_aset = Data_aset::join('kategoris', 'data_asets.kategori_id', '=', 'kategoris.id')
+                    ->select('data_asets.*', 'kategoris.nama_kategori as nama_kategori')
+                    ->get();
+                $data = array(
+                    'data_kategori' => Kategori::all(),
+                    'data_aset'     => $data_aset,
+                );
+                return view('data_aset', $data);
+            } else {
+                return redirect()->route('login')->with('failed', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+            }
+        } else {
+            return redirect()->route('login')->with('failed', 'Anda harus login terlebih dahulu.');
+        }
     }
 
     public function store(Request $request)
