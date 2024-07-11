@@ -57,6 +57,8 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/peminjaman-admin', [PeminjamanAdminController::class, 'peminjaman_admin'])->name('peminjaman-admin')->middleware('auth');
 Route::put('/peminjaman/update/{id}', [PeminjamanAdminController::class, 'update'])->name('peminjaman.update')->middleware('auth');
 Route::delete('/peminjaman/destroy/{id}', [PeminjamanAdminController::class, 'destroy'])->name('peminjaman.destroy')->middleware('auth');
+Route::put('/peminjaman-admin/update/{id}', [PeminjamanAdminController::class, 'update'])->name('peminjaman-admin.update')->middleware('auth');
+Route::post('/peminjaman/terima', [PeminjamanAdminController::class, 'terimaPeminjaman'])->name('peminjaman.terima');
 
 //Data Aset Keluar
 Route::get('/aset_keluar', [AsetKeluarController::class, 'aset_keluar'])->name('aset_keluar')->middleware('auth');

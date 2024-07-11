@@ -83,7 +83,7 @@
 					</div>
 					
 					<div class="form-group">
-						<a href="tg://resolve?domain=your_bot_username" target="_blank">Dapatkan Chat id</a>
+						<a href="https://t.me/userinfobot" target="_blank">Dapatkan Chat id</a>
 					</div>
 					
 					<div class="form-action mb-3">
