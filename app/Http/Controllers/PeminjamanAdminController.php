@@ -4,37 +4,44 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
-use App\Models\Data_aset;
-use Illuminate\Support\Facades\Auth;
 
 class PeminjamanAdminController extends Controller
 {
-    public function peminjaman_admin()
+    public function peminjaman_admin(Request $request)
     {
-        // Ambil semua data peminjaman
+        // Lakukan sesuatu dengan $request jika diperlukan
+
+        // Ambil semua data peminjaman beserta relasi user dan data_asets
         $peminjaman = Peminjaman::with(['user', 'data_aset'])->get();
 
         // Tampilkan data pada blade peminjaman-admin
         return view('peminjaman-admin', compact('peminjaman'));
     }
 
-    public function update(Request $request, $id)
+    public function terimaPeminjaman(Request $request)
     {
-        $peminjaman = Peminjaman::findOrFail($id);
-        $validated = $request->validate([
-            'status_peminjaman' => 'required|in:diterima,ditolak,pending',
-        ]);
+        $peminjamanId = $request->input('peminjaman_id');
+        $peminjaman = Peminjaman::find($peminjamanId);
 
-        $peminjaman->update($validated);
+        if ($peminjaman) {
+            // Kirim pesan ke bot Telegram
+            $telegramBotToken = env('TELEGRAM_BOT_TOKEN');
+            $chatId = $peminjaman->user->chat_id;
+            $message = "Peminjaman Anda telah diterima.";
 
-        return redirect()->back()->with('success', 'Status peminjaman berhasil diubah');
-    }
+            $response = Http::post("https://api.telegram.org/bot{$telegramBotToken}/sendMessage", [
+                'chat_id' => $chatId,
+                'text' => $message,
+            ]);
 
-    public function destroy($id)
-    {
-        $peminjaman = Peminjaman::findOrFail($id);
-        $peminjaman->delete();
+            if ($response->successful()) {
+                return redirect()->back()->with('success', 'Pesan telah dikirim ke pengguna.');
+            } else {
+                return redirect()->back()->with('error', 'Gagal mengirim pesan ke pengguna.');
+            }
+        }
 
-        return redirect()->back()->with('success', 'Peminjaman berhasil dihapus');
+        return redirect()->back()->with('error', 'Peminjaman tidak ditemukan.');
     }
 }
+

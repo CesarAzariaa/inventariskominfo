@@ -201,8 +201,6 @@
                     <label>Status</label>
                     <select class="form-control" name="status" required>
                         <option value="">Pilih Status</option>
-                        <option value="Tersedia">Tersedia</option>
-                        <option value="Terpakai">Terpakai</option>
                         <option value="Rusak">Rusak</option>
                         <option value="Dipinjam">Dipinjam</option>
                     </select>

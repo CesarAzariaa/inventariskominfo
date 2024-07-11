@@ -1,7 +1,6 @@
 @extends('layout.layout')
 
 @section('content')
-    
 <div class="main-panel">
     <div class="content">
         <div class="page-inner">
@@ -35,305 +34,91 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="add-row" class="display table table-striped table-hover" >
+                                <table id="add-row" class="display table table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <th>No</th>
+                                            <th>Nama User</th>
                                             <th>Jenis Aset</th>
-                                            <th>Kategori</th>
-                                            <th>Merk</th>
-                                            <th>Model</th>
-                                            <th>Stok</th>
-                                            <th>Tanggal Peminjaman</th>
-                                            <th>Status</th>
+                                            <th>Tanggal Pinjam</th>
+                                            <th>Tanggal Kembali</th>
+                                            <th>Status Peminjaman</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php $no=1 @endphp
+                                        @php $no = 1; @endphp
                                         @foreach ($peminjaman as $row)
-                                           @if ($row->status == 'Dipinjam')
-                                           <tr>
-                                               <td>{{$no++}}</td>
-                                               <td>{{$row->nama_aset}}</td>
-                                               <td>{{$row->kategori->nama_kategori}}</td>
-                                               <td>{{$row->merk}}</td>
-                                               <td>{{$row->model}}</td>
-                                               <td>{{$row->stok}} Pcs </td>
-                                               <td>{{$row->tanggal_pinjam}}</td>
-                                               <td>{{$row->status}}</td>
-                                               <td>
-                                                <a href="#modalView{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-info btn-custom"><i class="fa fa-eye"></i> View</a>
-                                                <a href="#modalEdit{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-primary btn-custom"><i class="fa fa-edit"></i> Edit</a>
-                                                <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger btn-custom"><i class="fa fa-trash"></i> Hapus</a>
-                                            </td>
-                                           </tr>
-                                           <!-- Modal View -->
-                                           <div class="modal fade" id="modalView{{$row->id}}" tabindex="-1" role="dialog" aria-hidden="true">
-                                            <div class="modal-dialog custom-modal" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header no-bd">
-                                                        <h3 class="modal-title">
-                                                            <span class="fw-mediumbold">Detail</span> 
-                                                            <span class="fw-mediumbold">Barang</span>
-                                                        </h3>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div style="display: flex; justify-content: center;">
-                                                            <img src="{{ asset('storage/gambar_aset/' . $row->nama_file) }}" alt="Gambar Barang" style="max-width: 100%; height: auto;">
-                                                        </div>                                                            
-                                                            <label>Jenis Aset</label>
-                                                            <input type="text" class="form-control" value="{{$row->nama_aset}}" readonly>
+                                        <tr>
+                                            <td>{{ $no++ }}</td>
+                                            <td>{{ $row->user->nama }}</td> 
+                                            <td>{{ $row->data_aset->nama_aset }}</td> 
+                                            <td>{{ $row->tgl_pinjam }}</td>
+                                            <td>{{ $row->tgl_kembali }}</td>
+                                            <td>{{ $row->status_peminjaman }}</td>
+                                            <td>
+                                            <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#modalDetail{{ $loop->iteration }}">
+                                                Detail
+                                            </button>
+                                            <div class="modal fade" id="modalDetail{{ $loop->iteration }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Detail Peminjaman</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
                                                         </div>
-                                        
-                                                        <div class="form-group">
-                                                            <label>Kategori</label>
-                                                            <input type="text" class="form-control" value="{{$row->nama_kategori}}" readonly>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label>Merk</label>
-                                                            <input type="text" class="form-control" value="{{$row->merk}}" readonly>
-                                                        </div>
-                                        
-                                                        <div class="form-group">
-                                                            <label>Model</label>
-                                                            <input type="text" class="form-control" value="{{$row->model}}" readonly>
-                                                        </div>
-                                        
-                                                        <div class="form-group">
-                                                            <label>Stok</label>
-                                                            <input type="text" class="form-control" value="{{$row->stok}} Pcs" readonly>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label>Tanggal Peminjaman</label>
-                                                            <input type="text" class="form-control" value="{{$row->tanggal_pinjam}}" readonly>
-                                                        </div>
-                                        
-                                                        <div class="form-group">
-                                                            <label>Status</label>
-                                                            <input type="text" class="form-control" value="{{$row->status}}" readonly>
-                                                        </div>
-                                        
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <div class="modal-body">
+                                                            <img src="{{ asset('storage/gambar_aset/' . $row->data_aset->nama_file) }}" alt="Gambar Aset" class="img-fluid centered-image">
+                                                            <p>Nama User: {{ $row->user->nama }}</p>
+                                                            <p>Jenis Aset: {{ $row->data_aset->nama_aset }}</p>
+                                                            <p>Merk: {{ $row->data_aset->merk }}</p>
+                                                            <p>Model: {{ $row->data_aset->model }}</p>
+                                                            <p>Tanggal Pinjam: {{ $row->tgl_pinjam }}</p>
+                                                            <p>Tanggal Kembali: {{ $row->tgl_kembali }}</p>
+                                                            <p>Status Peminjaman: {{ $row->status_peminjaman }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalTerima{{ $loop->iteration }}">
+                                                Terima
+                                            </button>
+                                            <div class="modal fade" id="modalTerima{{ $loop->iteration }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Terima Peminjaman</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Apakah Anda yakin ingin menerima peminjaman ini?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                                                            <form action="{{ route('peminjaman-admin.update', ['id' => $row->id]) }}" method="POST">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <input type="hidden" name="status_peminjaman" value="diterima">
+                                                                <button type="submit" class="btn btn-primary">Ya</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        @endif
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>                            
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-</div>
-<div class="modal fade" id="modalCreate" tabindex="-1" role="dialog" aria-hidden="true">
-<div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-header no-bd">
-            <h3 class="modal-title">
-                <span class="fw-mediumbold">Tambah</span> 
-                <span class="fw-mediumbold">Barang</span>
-            </h3>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <form method="POST" action="/peminjaman-admin/store" enctype="multipart/form-data">
-            @csrf
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Nama Aset</label>
-                    <input type="text" class="form-control" name="nama_aset" placeholder="" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Nama Kategori</label>
-                    <select class="form-control" name="kategori_id" required>
-                        <option value="" hidden> Pilih Kategori </option>
-                        @foreach ($data_kategori as $z)
-                        <option value="{{ $z->id }}">{{ $z->nama_kategori }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Model</label>
-                    <input type="text" class="form-control" name="model" placeholder="" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Merk</label>
-                    <input type="text" class="form-control" name="merk" placeholder="" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Stok</label>
-                    <div class="input-group">
-                        <input type="number" class="form-control" name="stok" placeholder="" required>
-                        <div class="input-group-append">
-                            <span class="input-group-text">Pcs</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Status</label>
-                    <select class="form-control" name="status" required>
-                        <option value="">Pilih Status</option>
-                        <option value="Tersedia">Tersedia</option>
-                        <option value="Terpakai">Terpakai</option>
-                        <option value="Rusak">Rusak</option>
-                        <option value="Dipinjam">Dipinjam</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Tanggal Peminjaman</label>
-                    <input type="date" class="form-control" name="tanggal_pinjam" placeholder="" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Gambar</label>
-                    <input type="file" class="form-control-file" name="nama_file" accept="image/*">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary"><i></i>Simpan Perubahan</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i></i>Batal</button>
-            </div>
-        </form>
-    </div>
-</div>
-</div>
-
-
-@foreach ($peminjaman as $d)
-<!-- Modal Edit -->
-<div class="modal fade" id="modalEdit{{$d->id}}" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header no-bd">
-                <h3 class="modal-title">
-                    <span class="fw-mediumbold">Edit</span> 
-                    <span class="fw-mediumbold">Barang</span>
-                </h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="/peminjaman-admin/update/{{$d->id}}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Jenis Aset</label>
-                        <input type="text" class="form-control" value="{{$d->nama_aset}}" name="nama_aset" placeholder="" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Nama Kategori</label>
-                        <select class="form-control" name="kategori_id" required>
-                            <!-- Tampilkan semua kategori dan tandai yang sebelumnya dipilih -->
-                            @foreach ($data_kategori as $x)
-                                <option value="{{ $x->id }}" {{ $d->id_kategori == $x->id ? 'selected' : '' }}>{{ $x->nama_kategori }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Model</label>
-                        <input type="text" class="form-control" value="{{$d->model}}" name="model" placeholder="" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Merk</label>
-                        <input type="text" class="form-control" value="{{$d->merk}}" name="merk" placeholder="" required>
-                    </div>
-                        
-                    <div class="form-group">
-                        <label>Stok</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" value="{{$d->stok}}" name="stok" placeholder="" required>
-                            <div class="input-group-append">
-                                <span class="input-group-text">Pcs</span>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select class="form-control" name="status" required>
-                            <option value="{{$d->status}}" selected>{{$d->status}}</option>
-                            <option value="Tersedia">Tersedia</option>
-                            <option value="Terpakai">Terpakai</option>
-                            <option value="Rusak">Rusak</option>
-                            <option value="Dipinjam">Dipinjam</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Tanggal Peminjaman</label>
-                        <input type="date" class="form-control" value="{{$d->tanggal_pinjam}}" name="tanggal_pinjam" placeholder="" required>
-                    </div>
-
-                    <div class="form-group">
-                        @if ($d->nama_file)
-                           <img src="{{ asset('storage/gambar_aset/' . $d->nama_file) }}" alt="Gambar Barang" style="max-width: 100%; height: auto;">
-                        @endif
-                        <input type="file" class="form-control-file" name="nama_file" accept="image/*">
-                        <small class="form-text text-muted">Pilih gambar untuk aset jika ingin mengganti gambar yang sudah ada.</small>
-                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary"><i></i>Simpan Perubahan</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i></i>Batal</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-<!-- Modal Hapus -->
-<div class="modal fade" id="modalHapus{{$d->id}}" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header no-bd">
-                <h3 class="modal-title">
-                    <span class="fw-mediumbold">Hapus</span> 
-                    <span class="fw-mediumbold">Barang</span>
-                </h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
-            <form method="POST" action="{{ route('peminjaman-admin.destroy', ['id' => $d->id]) }}">
-                @csrf
-                @method('DELETE')
-                <div class="modal-body">
-                    <div class="form-group">
-                        <h4 style="text-align: center;">Apakah Anda Ingin Menghapus Data Ini?</h4>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger"><i></i>Hapus</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i></i>Close</button>
-                </div>
-            </form>
         </div>
     </div>
 </div>
@@ -345,12 +130,15 @@
 
     @media (max-width: 768px) {
         .btn-custom {
-            width: 100%; 
+            width: 100%;
             margin-bottom: 5px;
         }
     }
+
+    .centered-image {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
 </style>
-
-@endforeach
-
 @endsection

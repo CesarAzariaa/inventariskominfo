@@ -103,10 +103,8 @@
                         </div>
                         <div class="form-group">
                             <label for="status_peminjaman">Status Peminjaman</label>
-                            <select class="form-control" id="status_peminjaman" name="status_peminjaman">
+                            <select class="form-control" id="status_peminjaman" name="status_peminjaman" readonly>
                                 <option value="pending">Pending</option>
-                                <option value="diterima">Diterima</option>
-                                <option value="ditolak">Ditolak</option>
                             </select>
                         </div>
                         <div class="card-action">
