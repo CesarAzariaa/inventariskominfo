@@ -35,13 +35,6 @@
                                 <div class="col-md-6">
                                     <input type="text" id="searchInput" class="form-control" placeholder="Cari Nama Aset...">
                                 </div>
-                                <div class="col-md-6">
-                                    <select id="statusFilter" class="form-control">
-                                        <option value="">Semua Status</option>
-                                        <option value="Tersedia">Tersedia</option>
-                                        <option value="Tidak Tersedia">Tidak Tersedia</option>
-                                    </select>
-                                </div>
                             </div>
                             <div class="table-responsive">
                                 <table id="add-row" class="display table table-striped table-hover" >

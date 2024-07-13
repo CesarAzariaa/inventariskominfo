@@ -49,16 +49,19 @@ Route::delete('/aset/destroy{id}', [DataAsetController::class, 'destroy'])->name
 Route::get('/aset_user', [AsetUserController::class, 'aset_user'])->name('aset_user')->middleware('auth');
 
 //Data Peminjaman
-Route::middleware(['auth'])->group(function () {
-    Route::get('/data_peminjaman', [DataPeminjamanController::class, 'index'])->name('data_peminjaman.index');
-    Route::post('/data_peminjaman/store', [DataPeminjamanController::class, 'store'])->name('data_peminjaman.store');
-});
+
+Route::get('/data_peminjaman', [DataPeminjamanController::class, 'index'])->name('data_peminjaman.index')->middleware('auth');
+Route::post('/data_peminjaman/store', [DataPeminjamanController::class, 'store'])->name('data_peminjaman.store')->middleware('auth');
+
 //Peminjaman Admin
 Route::get('/peminjaman-admin', [PeminjamanAdminController::class, 'peminjaman_admin'])->name('peminjaman-admin')->middleware('auth');
 Route::put('/peminjaman/update/{id}', [PeminjamanAdminController::class, 'update'])->name('peminjaman.update')->middleware('auth');
 Route::delete('/peminjaman/destroy/{id}', [PeminjamanAdminController::class, 'destroy'])->name('peminjaman.destroy')->middleware('auth');
 Route::put('/peminjaman-admin/update/{id}', [PeminjamanAdminController::class, 'update'])->name('peminjaman-admin.update')->middleware('auth');
-Route::post('/peminjaman/terima', [PeminjamanAdminController::class, 'terimaPeminjaman'])->name('peminjaman.terima');
+// Route::post('/peminjaman/terima', [PeminjamanAdminController::class, 'terimaPeminjaman'])->name('peminjaman.terima');
+
+// Route::get('peminjaman-admin', [PeminjamanAdminController::class, 'peminjaman_admin']);
+Route::post('peminjaman-admin/terima', [PeminjamanAdminController::class, 'terimaPeminjaman'])->name('peminjaman-admin.terima');
 
 //Data Aset Keluar
 Route::get('/aset_keluar', [AsetKeluarController::class, 'aset_keluar'])->name('aset_keluar')->middleware('auth');

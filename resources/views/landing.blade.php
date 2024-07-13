@@ -7,14 +7,14 @@
         <meta name="author" content="" />
         <title>Inventaris Barang Diskominfotik Bengkalis</title>
         <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="{{ asset('landing-page/assets/icon.ico')}}" />
+        <link rel="icon" type="image/x-icon" href="landing-page/assets/icon.ico" />
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
         <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
         <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="{{ asset('landing-page/css/styles.css')}}" rel="stylesheet"' />
+        <link href="landing-page/css/styles.css" rel="stylesheet"/>
     </head>
     <body id="page-top">
         <!-- Navigation-->
@@ -106,7 +106,7 @@
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
-        <script src="{{ asset('landing-page/js/scripts.js')}}"></script>
+        <script src="landing-page/js/scripts.js"></script>
         <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
         <!-- * *                               SB Forms JS                               * *-->
         <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
