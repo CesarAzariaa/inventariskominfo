@@ -50,7 +50,7 @@
 			<!-- Navbar Header -->
 			<nav class="navbar navbar-header navbar-expand-lg">   
 				<div style="text-align: center;">
-					<font color="white" alt="navbar-brand" class="navbar-brand" style="font-weight: bold;">Dinas Komunikasi Informatika dan Statistik</font>
+					<font color="white" alt="navbar-brand" class="navbar-brand" style="font-weight: bold;">DISKOMINFOTIK BENGKALIS</font>
 				</div>				
 			</nav>
 			<!-- End Navbar -->
@@ -114,7 +114,7 @@
 						<li class="nav-item">
 							<a href="{{ route('data_aset') }}">
 								<i class="fas fa-box"></i>
-								<p>Data Aset</p>
+								<p>Data Aset Masuk</p>
 							</a>
 						</li>
 

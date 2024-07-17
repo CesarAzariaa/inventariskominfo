@@ -6,7 +6,7 @@
     <div class="content">
         <div class="page-inner">
             <div class="page-header">
-                <h4 class="page-title">Data Aset</h4>
+                <h4 class="page-title">Data Aset Masuk</h4>
                 <ul class="breadcrumbs">
                     <li class="nav-home">
                         <a href="home">
@@ -17,7 +17,7 @@
                         <i class="flaticon-right-arrow"></i>
                     </li>
                     <li class="nav-item">
-                        <a href="data_aset">Data Aset</a>
+                        <a href="data_aset">Data Aset Masuk</a>
                     </li>
                 </ul>
             </div>
@@ -26,7 +26,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex align-items-center">
-                                <h4 class="card-title">Data Aset</h4>
+                                <h4 class="card-title">Data Aset Masuk</h4>
                                 <button class="btn btn-success btn-round ml-auto" data-toggle="modal" data-target="#modalCreate">
                                     <i class="fa fa-plus"></i>
                                     Tambah Data
@@ -63,7 +63,7 @@
                                                 <td>{{$row->status}}</td>
                                                 <td>{{$row->tanggal}}</td>
                                                 <td>
-                                                    <a href="#modalView{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-info btn-custom"><i class="fa fa-eye"></i> View</a>
+                                                    <a href="#modalView{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-secondary btn-custom"><i class="fa fa-eye"></i> View</a>
                                                     <a href="#modalEdit{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-primary btn-custom"><i class="fa fa-edit"></i> Edit</a>
                                                     <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger btn-custom"><i class="fa fa-trash"></i> Hapus</a>
                                                 </td>

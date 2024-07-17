@@ -25,6 +25,9 @@
 <body class="login">
 	<div class="wrapper wrapper-login">
 		<div class="container container-login animated fadeIn">
+			<div class="text-center">
+				<img src="assets/img/kominfo.png" alt="Logo" style="width: 100px; height: auto;">
+			</div>
 			<form action="{{ route('login.proses') }}" method="POST">
 				@csrf
 			<h3 class="text-center">Silahkan Login</h3>

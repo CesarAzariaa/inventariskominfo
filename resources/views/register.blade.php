@@ -76,7 +76,7 @@
 					<div class="form-group form-floating-label position-relative">
 						<input id="chat_id" name="chat_id" type="number" class="form-control input-border-bottom" required value="{{ old('chat_id') }}">
 						<label for="chat_id" class="placeholder">Chat ID</label>
-						<a href="" class="position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%);" title="Untuk mendapatkan Chat ID Anda, kirim pesan ke bot Telegram kami dan ketikkan '/getid'. Anda akan menerima Chat ID Anda dari bot tersebut, Untuk Melakukan Peminjaman Aset."><i class="fas fa-info-circle"></i></a>
+						<a target="_blank" class="position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%);" title="Untuk mendapatkan Chat ID Anda, kirim pesan ke '@userinfobot' dan klik '/start'. Anda akan menerima Chat ID Anda dari bot tersebut, Untuk Melakukan Peminjaman Aset."><i class="fas fa-info-circle"></i></a>
 						@error('chat_id')
 							<small>{{ $message }}</small>
 						@enderror

@@ -25,6 +25,9 @@
                     <div class="card-title">Form Peminjaman Aset</div>
                 </div>
                 <div class="card-body">
+                    <div class="alert alert-info mt-4">
+                        <p>Sebelum Melakukan Pengisian Form Peminjaman, klik <a href="https://t.me/DiskominfotikInvBot" target="_blank">di sini </a>agar bot dapat mengenali chat id anda dan klik tombol <strong>/start</strong> pada bot, ketika sudah selesai silahkan lanjutkan pengisian form.</p>
+                    </div>
                     <!-- Form Peminjaman -->
                     <form action="{{ route('data_peminjaman.store') }}" method="POST">
                         @csrf
@@ -103,17 +106,18 @@
                         </div>
                         <div class="form-group">
                             <label for="status_peminjaman">Status Peminjaman</label>
-                            <select class="form-control" id="status_peminjaman" name="status_peminjaman">
+                            <select class="form-control" id="status_peminjaman" name="status_peminjaman" readonly>
                                 <option value="Pending" selected>Pending</option>
-                                <option value="Diterima">Diterima</option>
                             </select>
                         </div>
                         <div class="card-action">
-                            <button type="submit" class="btn btn-success" id="submitBtn">Submit</button>
-                            <button type="reset" class="btn btn-danger">Cancel</button>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-success" id="submitBtn" style="width: auto;">
+                                    <i class="fas fa-check"></i> Submit
+                                </button>
+                            </div>
                         </div>
                     </form>
-                    
                 </div>
             </div>
         </div>

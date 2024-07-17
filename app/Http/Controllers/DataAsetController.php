@@ -13,6 +13,7 @@ use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use App\Http\Controllers\AsetKeluarController;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
+use PDF;
 
 class DataAsetController extends Controller
 {
@@ -27,6 +28,7 @@ class DataAsetController extends Controller
             if (Auth::user()->role == 'admin') {
                 $data_aset = Data_aset::join('kategoris', 'data_asets.kategori_id', '=', 'kategoris.id')
                     ->select('data_asets.*', 'kategoris.nama_kategori as nama_kategori')
+                    ->whereIn('data_asets.status', ['tersedia', 'terpakai'])
                     ->get();
                 $data = array(
                     'data_kategori' => Kategori::all(),
@@ -187,5 +189,37 @@ class DataAsetController extends Controller
         $data_aset = Data_aset::findOrFail($id);
 
         return view('detail_data_aset', compact('data_aset'));
+    }
+
+    public function cetakPdf(Request $request)
+    {
+        $kategori_id = $request->input('kategori_id');
+        $status = $request->input('status');
+        $bulan = $request->input('bulan');
+        $selected_ids = json_decode($request->input('selected_ids'), true);
+
+        $query = Data_aset::query();
+
+        if (!empty($selected_ids)) {
+            $query->whereIn('id', $selected_ids);
+        } else {
+            if ($kategori_id && $kategori_id !== 'Semua') {
+                $query->where('kategori_id', $kategori_id);
+            }
+
+            if ($status && $status !== 'Semua') {
+                $query->where('status', $status);
+            }
+
+            if ($bulan) {
+                $query->whereMonth('tanggal', '=', date('m', strtotime($bulan)))
+                      ->whereYear('tanggal', '=', date('Y', strtotime($bulan)));
+            }
+        }
+
+        $data_aset = $query->get();
+
+        $pdf = PDF::loadView('pdf.data-aset', compact('data_aset'));
+        return $pdf->download('data-aset.pdf');
     }
 }

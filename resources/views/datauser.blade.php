@@ -266,4 +266,24 @@
 
 @endforeach
 
+@if(session('error'))
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: '{{ session('error') }}',
+    });
+</script>
+@endif
+
+@if ($errors->any())
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: '{{ $errors->first() }}',
+        });
+    </script>
+@endif
+
 @endsection

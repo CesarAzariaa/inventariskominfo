@@ -8,7 +8,6 @@ use App\Models\Peminjaman;
 use App\Models\Kategori;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Services\TelegramService;
 
 class DataPeminjamanController extends Controller
 {
@@ -67,5 +66,11 @@ class DataPeminjamanController extends Controller
         ]);
 
         return redirect()->route('data_peminjaman.index')->with('success', 'Data peminjaman berhasil disimpan.');
+    }
+
+    public function showHistoryPeminjaman()
+    {
+        $riwayat_peminjaman = Peminjaman::where('user_id', auth()->id())->with('data_aset')->get();
+        return view('history-peminjaman', compact('riwayat_peminjaman'));
     }
 }

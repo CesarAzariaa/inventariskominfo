@@ -6,37 +6,34 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 100px;
         }
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
+        .card {
+            border: 2px solid #000000;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 18%; /* Sesuaikan width agar pas dua kartu per baris */
+            display: flex;
+            align-items: flex;
+            justify-content: center;
         }
-        table, th, td {
-            border: 1px solid rgb(220, 46, 46);
+        .card img {
+            width: 100px;
+            height: 100px;
         }
-        th, td {
-            padding: 8px;
-            text-align: left;
+        .card .content {
+            flex: 1;
+            margin-left: 10px;
         }
-        th {
-            background-color: #f2f2f2;
-        }
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        tbody tr:hover {
-            background-color: #f1f1f1;
-        }
-        img {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+        .card .qr-code {
+            margin-left: 10px;
         }
     </style>
 </head>

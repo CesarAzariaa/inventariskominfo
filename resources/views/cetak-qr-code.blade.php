@@ -25,7 +25,9 @@
                                     </select>
                                 </div>
                                 <div class="form-group text-left">
-                                    <button type="button" id="cetak-button" class="btn btn-primary">Cetak PDF</button>
+                                    <button type="button" id="cetak-button" class="btn btn-danger">
+                                        <i class="fa fa-file"></i> Cetak PDF
+                                    </button>
                                 </div>
                             </form>
                         </div>

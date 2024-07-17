@@ -16,7 +16,6 @@ class Data_aset extends Model
         'nama_aset',
         'model',
         'merk',
-        'serial_number',
         'stok',
         'status',
         'tanggal',

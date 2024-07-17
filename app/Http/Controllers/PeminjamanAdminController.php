@@ -52,4 +52,5 @@ class PeminjamanAdminController extends Controller
 
         return redirect()->back()->with('error', 'Peminjaman tidak ditemukan.');
     }
+
 }

@@ -47,6 +47,7 @@
                                             <th>Model</th>
                                             <th>Stok</th>
                                             <th>Status</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -119,8 +120,6 @@
         <p><strong>Model:</strong> {{$row->model}}</p>
         <p><strong>Stok:</strong> {{$row->stok}} Pcs</p>
         <p><strong>Status:</strong> {{$row->status}}</p>
-        <p><strong>QR Code:</strong></p>
-        <img src="{{ asset('storage/' . $row->barcode) }}" alt="QR Code" style="width: 125px; height: 125px;">
       </div>
     </div>
   </div>

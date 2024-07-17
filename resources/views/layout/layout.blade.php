@@ -115,7 +115,7 @@
 							<li class="nav-item {{ request()->is('data_aset') ? 'active' : '' }}">
 								<a href="{{ route('data_aset') }}">
 									<i class="fas fa-box"></i>
-									<p>Data Aset</p>
+									<p>Data Aset Masuk</p>
 								</a>
 							</li>
 
@@ -214,7 +214,6 @@
 				icon: 'error',
 				title: 'Oops...',
 				text: '{{ session('error') }}',
-				footer: '<a href>Why do I have this issue?</a>'
 			});
 		</script>
 		@endif

@@ -51,7 +51,7 @@
 			<!-- Navbar Header -->
 			<nav class="navbar navbar-header navbar-expand-lg">   
 				<div style="text-align: center;">
-					<font color="white" alt="navbar-brand" class="navbar-brand" style="font-weight: bold;">Diskominfotik Bengkalis</font>
+					<font color="white" alt="navbar-brand" class="navbar-brand" style="font-weight: bold;">DISKOMINFOTIK BENGKALIS</font>
 				</div>
 			</nav>
 			<!-- End Navbar -->
@@ -102,6 +102,13 @@
 								<a href="{{ 'data_peminjaman' }}">
 									<i class="fas fa-address-book"></i>
 									<p>Peminjaman Aset</p>
+								</a>
+							</li>
+
+							<li class="nav-item {{ request()->is('history-peminjaman') ? 'active' : '' }}">
+								<a href="{{ route('history-peminjaman') }}">
+									<i class="fas fa-history"></i>
+									<p>Riwayat Peminjaman</p>
 								</a>
 							</li>
 

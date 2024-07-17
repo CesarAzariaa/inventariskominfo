@@ -38,7 +38,7 @@
                                     <label for="filter-kategori">Pilih Kategori</label>
                                     <select id="filter-kategori" name="kategori_id" class="form-control">
                                         <option value="">Pilih sesuai kebutuhan</option>
-                                        <option value="">Semua</option>
+                                        <option value="Semua">Semua</option>
                                         @foreach ($data_kategori as $kat)
                                             <option value="{{ $kat->id }}">{{ $kat->nama_kategori }}</option>
                                         @endforeach
@@ -48,7 +48,7 @@
                                     <label for="filter-status">Pilih Status</label>
                                     <select id="filter-status" name="status" class="form-control">
                                         <option value="">Pilih sesuai kebutuhan</option>
-                                        <option value="">Semua</option>
+                                        <option value="Semua">Semua</option>
                                         <option value="tersedia">Tersedia</option>
                                         <option value="terpakai">Terpakai</option>
                                         <option value="dipinjam">Dipinjam</option>
@@ -60,7 +60,9 @@
                                     <input type="month" id="filter-bulan" name="bulan" class="form-control" placeholder="Pilih sesuai kebutuhan">
                                 </div>
                                 <div class="form-group text-left">
-                                    <button type="button" id="cetak-button" class="btn btn-primary">Cetak PDF</button>
+                                    <button type="button" id="cetak-button" class="btn btn-danger">
+                                        <i class="fa fa-file"></i> Cetak PDF
+                                    </button>
                                 </div>
                             </form>                                                  
                         </div>
@@ -124,7 +126,7 @@
                 showRow = false;
             }
 
-            if (status && status !== "Pilih sesuai kebutuhan" && rowStatus !== status) {
+            if (status && status !== "Pilih sesuai kebutuhan" && status !== "Semua" && rowStatus !== status) {
                 showRow = false;
             }
 
@@ -156,33 +158,22 @@
     });
 
     document.getElementById('cetak-button').addEventListener('click', function() {
-    var kategori = document.getElementById('filter-kategori').value;
-    var status = document.getElementById('filter-status').value;
-    var bulan = document.getElementById('filter-bulan').value;
+        var form = document.getElementById('cetak-form');
 
-    var form = document.getElementById('cetak-form');
+        // Ambil ID aset yang dipilih
+        var selectedIds = [];
+        var checkboxes = document.querySelectorAll('.row-checkbox:checked');
+        checkboxes.forEach(function(checkbox) {
+            selectedIds.push(checkbox.value);
+        });
 
-    // Set nilai filter ke dalam input tersembunyi
-    var inputKategori = document.createElement('input');
-    inputKategori.type = 'hidden';
-    inputKategori.name = 'kategori_id';
-    inputKategori.value = kategori;
-    form.appendChild(inputKategori);
+        var inputSelectedIds = document.createElement('input');
+        inputSelectedIds.type = 'hidden';
+        inputSelectedIds.name = 'selected_ids';
+        inputSelectedIds.value = JSON.stringify(selectedIds);
+        form.appendChild(inputSelectedIds);
 
-    var inputStatus = document.createElement('input');
-    inputStatus.type = 'hidden';
-    inputStatus.name = 'status';
-    inputStatus.value = status;
-    form.appendChild(inputStatus);
-
-    var inputBulan = document.createElement('input');
-    inputBulan.type = 'hidden';
-    inputBulan.name = 'bulan';
-    inputBulan.value = bulan;
-    form.appendChild(inputBulan);
-
-    form.submit();
-});
-
+        form.submit();
+    });
 </script>
 @endsection
