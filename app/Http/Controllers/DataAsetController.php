@@ -141,7 +141,13 @@ class DataAsetController extends Controller
 
             // Kurangi stok dari data aset yang sudah ada
             $data_aset->stok -= $input['stok'];
-            $data_aset->save();
+            
+            // Periksa apakah stok menjadi 0
+            if ($data_aset->stok <= 0) {
+                $data_aset->delete();
+            } else {
+                $data_aset->save();
+            }
         } else {
             // Jika tidak ada perubahan pada status dan stok, hanya update data aset yang sudah ada
             if ($request->hasFile('nama_file')) {
@@ -175,6 +181,7 @@ class DataAsetController extends Controller
         return redirect()->route('data_aset')->with('error', 'Gagal memperbarui data aset: ' . $e->getMessage());
     }
 }
+
 
 
     public function destroy($id)

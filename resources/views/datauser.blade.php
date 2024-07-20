@@ -50,6 +50,7 @@
                                             <th>Username</th>
                                             <th>No Handphone</th>
                                             <th>Asal Instansi</th>
+                                            <th>Chat ID</th>
                                             <th>Role</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -63,6 +64,7 @@
                                            <td>{{$row->username}}</td>
                                            <td>{{$row->no_handphone}}</td>
                                            <td>{{$row->asal_instansi}}</td>
+                                           <td>{{$row->chat_id}}</td>
                                            <td>{{$row->role}}</td>
                                           <td>
                                             <a href="#modalEdit{{$row->id}}" data-toggle="modal"class="btn btn-xs btn-primary btn-custom"><i class="fa fa-edit"></i>Edit</a>

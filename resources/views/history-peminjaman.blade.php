@@ -49,7 +49,6 @@
                                             <th>No</th>
                                             <th>Nama Aset</th>
                                             <th>Merk</th>
-
                                             <th>Model</th>
                                             <th>Stok</th>
                                             <th>Tanggal Peminjaman</th>
@@ -67,10 +66,10 @@
                                            <td>{{$peminjaman->data_aset->merk}}</td>
                                            <td>{{$peminjaman->data_aset->model}}</td>
                                            <td>{{$peminjaman->data_aset->stok}}</td>
-                                           <td>{{$peminjaman->tgl_pinjam}}</td>
-                                           <td>{{$peminjaman->tgl_kembali}}</td>
+                                           <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->translatedFormat('d M Y') }}</td>
+                                           <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_kembali)->translatedFormat('d M Y') }}</td>
                                            <td>
-                                               <span class="badge {{ $peminjaman->status_peminjaman == 'pending' ? 'badge-warning' : 'badge-primary' }}">
+                                               <span class="badge {{ $peminjaman->status_peminjaman == 'Pending' ? 'badge-warning' : 'badge-primary' }}">
                                                    {{ $peminjaman->status_peminjaman }}
                                                </span>
                                            </td>
@@ -90,12 +89,12 @@
 </div>
 <style>
     .badge-warning {
-        background-color: yellow;
-        color: black;
+        background-color: rgb(255, 221, 0);
+        color: rgb(0, 0, 0);
     }
 
     .badge-primary {
-        background-color: rgb(1, 119, 255);
+        background-color: rgb(0, 146, 5);
         color: white;
     }
 </style>

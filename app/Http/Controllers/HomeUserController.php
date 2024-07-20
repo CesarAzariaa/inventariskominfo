@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Data_aset;
-
-
+use App\Models\Peminjaman;
 
 class HomeUserController extends Controller
 {
@@ -15,8 +14,8 @@ class HomeUserController extends Controller
         if (Auth::check()) {
             if (Auth::user()->role == 'user') {
                 $data_aset = Data_aset::all();
-                
-                // Mengumpulkan data untuk chart berdasarkan bulan dan tahun dengan memastikan semua bulan ditampilkan
+                $peminjaman = Peminjaman::all();
+
                 $chart_data = \DB::table(\DB::raw('(
                     SELECT 1 AS bulan UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6
                     UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12
@@ -46,6 +45,7 @@ class HomeUserController extends Controller
                 })->map->count();
 
                 return view('homeUser', [
+                    'peminjaman' => $peminjaman,
                     'data_aset' => $data_aset,
                     'chart_data' => $chart_data,
                     'dataAsetMasuk' => $dataAsetMasuk,

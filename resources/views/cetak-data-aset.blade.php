@@ -35,16 +35,6 @@
                             <form id="cetak-form" action="{{ route('data-aset.pdf') }}" method="POST">
                                 @csrf
                                 <div class="form-group">
-                                    <label for="filter-kategori">Pilih Kategori</label>
-                                    <select id="filter-kategori" name="kategori_id" class="form-control">
-                                        <option value="">Pilih sesuai kebutuhan</option>
-                                        <option value="Semua">Semua</option>
-                                        @foreach ($data_kategori as $kat)
-                                            <option value="{{ $kat->id }}">{{ $kat->nama_kategori }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
                                     <label for="filter-status">Pilih Status</label>
                                     <select id="filter-status" name="status" class="form-control">
                                         <option value="">Pilih sesuai kebutuhan</option>
@@ -84,7 +74,7 @@
                                     <tbody>
                                         @php $no=1 @endphp
                                         @foreach ($data_aset as $row)
-                                            <tr class="aset-row" data-kategori="{{ $row->kategori->id }}" data-tanggal="{{ $row->tanggal }}">
+                                            <tr class="aset-row" data-tanggal="{{ $row->tanggal }}">
                                                 <td><input type="checkbox" class="row-checkbox" name="selected_ids[]" value="{{ $row->id }}"></td>
                                                 <td>{{$no++}}</td>
                                                 <td>{{$row->nama_aset}}</td>
@@ -92,7 +82,7 @@
                                                 <td>{{$row->merk}}</td>
                                                 <td>{{$row->stok}} Pcs</td>
                                                 <td>{{$row->status}}</td>
-                                                <td>{{$row->tanggal}}</td>
+                                                <td>{{ \Carbon\Carbon::parse($row->tanggal)->translatedFormat('d M Y') }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -108,7 +98,6 @@
 
 <script>
     function filterRows() {
-        var kategori = document.getElementById('filter-kategori').value;
         var status = document.getElementById('filter-status').value;
         var bulan = document.getElementById('filter-bulan').value;
         
@@ -116,15 +105,10 @@
         var dataAvailable = false;
 
         rows.forEach(function(row) {
-            var rowKategori = row.getAttribute('data-kategori');
             var rowStatus = row.querySelector('td:nth-child(7)').innerText.toLowerCase();
             var rowTanggal = row.getAttribute('data-tanggal').substring(0, 7);
 
             var showRow = true;
-
-            if (kategori && kategori !== "Pilih sesuai kebutuhan" && kategori !== "Semua" && rowKategori != kategori) {
-                showRow = false;
-            }
 
             if (status && status !== "Pilih sesuai kebutuhan" && status !== "Semua" && rowStatus !== status) {
                 showRow = false;
@@ -145,7 +129,6 @@
         return dataAvailable;
     }
 
-    document.getElementById('filter-kategori').addEventListener('change', filterRows);
     document.getElementById('filter-status').addEventListener('change', filterRows);
     document.getElementById('filter-bulan').addEventListener('change', filterRows);
 

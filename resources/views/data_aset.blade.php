@@ -61,11 +61,13 @@
                                                 <td>{{ $row->model }}</td>
                                                 <td>{{$row->stok}} Pcs</td>
                                                 <td>{{$row->status}}</td>
-                                                <td>{{$row->tanggal}}</td>
+                                                <td>{{ \Carbon\Carbon::parse($row->tanggal)->translatedFormat('d M Y') }}</td>
                                                 <td>
-                                                    <a href="#modalView{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-secondary btn-custom"><i class="fa fa-eye"></i> View</a>
-                                                    <a href="#modalEdit{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-primary btn-custom"><i class="fa fa-edit"></i> Edit</a>
-                                                    <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger btn-custom"><i class="fa fa-trash"></i> Hapus</a>
+                                                    <div class="btn-group">
+                                                        <a href="#modalView{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-secondary btn-custom"><i class="fa fa-eye"></i> View</a>
+                                                        <a href="#modalEdit{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-primary btn-custom"><i class="fa fa-edit"></i> Edit</a>
+                                                        <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger btn-custom"><i class="fa fa-trash"></i> Hapus</a>
+                                                    </div>
                                                 </td>
                                             </tr>
                                             <!-- Modal View -->
@@ -116,7 +118,7 @@
                                             
                                                             <div class="form-group">
                                                                 <label>Tanggal</label>
-                                                                <input type="text" class="form-control" value="{{$row->tanggal}}" readonly>
+                                                                <input type="text" class="form-control" value="{{ \Carbon\Carbon::parse($row->tanggal)->translatedFormat('d M Y') }}" readonly>
                                                             </div>
                                             
                                                             <div class="form-group">
@@ -338,11 +340,20 @@
     </div>
     
     <style>
-        .btn-custom {
-            width: 60px;
+        .btn-group {
+            display: flex;
+            gap: 5px;
         }
-    
+
+        .btn-custom {
+            width: auto;
+        }
+
         @media (max-width: 768px) {
+            .btn-group {
+                flex-direction: column;
+            }
+
             .btn-custom {
                 width: 100%; 
                 margin-bottom: 5px;

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Data_aset;
 use App\Models\User;
+use App\Models\Peminjaman;
 
 class HomeController extends Controller
 {
@@ -20,6 +21,7 @@ class HomeController extends Controller
             if (Auth::user()->role == 'admin') {
                 $data_aset = Data_aset::all();
                 $data_user = User::all();
+                $peminjaman = Peminjaman::all();
                 
                 // Query untuk mengambil data aset masuk dan keluar berdasarkan bulan
                 $chart_data = \DB::table(\DB::raw('(
@@ -52,6 +54,7 @@ class HomeController extends Controller
                 return view('home', [
                     'data_aset' => $data_aset,
                     'data_user' => $data_user,
+                    'peminjaman' => $peminjaman,
                     'chart_data' => $chart_data,
                     'dataAsetMasuk' => $dataAsetMasuk,
                     'dataAsetKeluar' => $dataAsetKeluar

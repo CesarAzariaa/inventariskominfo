@@ -61,11 +61,13 @@
                                                <td>{{$row->model}}</td>
                                                <td>{{$row->stok}} Pcs </td>
                                                <td>{{$row->status}}</td>
-                                               <td>{{$row->tanggal}}</td>
+                                               <td>{{ \Carbon\Carbon::parse($row->tanggal)->translatedFormat('d M Y') }}</td>
                                                <td>
-                                                <a href="#modalView{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-secondary btn-custom"><i class="fa fa-eye"></i> View</a>
-                                                <a href="#modalEdit{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-primary btn-custom"><i class="fa fa-edit"></i> Edit</a>
-                                                <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger btn-custom"><i class="fa fa-trash"></i> Hapus</a>
+                                                <div class="btn-group">
+                                                    <a href="#modalView{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-secondary btn-custom"><i class="fa fa-eye"></i> View</a>
+                                                    <a href="#modalEdit{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-primary btn-custom"><i class="fa fa-edit"></i> Edit</a>
+                                                    <a href="#modalHapus{{$row->id}}" data-toggle="modal" class="btn btn-xs btn-danger btn-custom"><i class="fa fa-trash"></i> Hapus</a>
+                                                </div>
                                             </td>
                                            </tr>
                                            <!-- Modal View -->
@@ -116,7 +118,7 @@
                                         
                                                         <div class="form-group">
                                                             <label>Tanggal</label>
-                                                            <input type="text" class="form-control" value="{{$row->tanggal}}" readonly>
+                                                            <input type="text" class="form-control" value="{{ \Carbon\Carbon::parse($row->tanggal)->translatedFormat('d M Y') }}" readonly>
                                                         </div>
                                         
                                                         <div class="form-group">
@@ -126,9 +128,6 @@
                                                             @else
                                                             <p>QR Code tidak tersedia.</p>
                                                         @endif
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -285,8 +284,6 @@
                             <option value="{{$d->status}}" selected>{{$d->status}}</option>
                             <option value="Tersedia">Tersedia</option>
                             <option value="Terpakai">Terpakai</option>
-                            <option value="Rusak">Rusak</option>
-                            <option value="Dipinjam">Dipinjam</option>
                         </select>
                     </div>
 
@@ -336,7 +333,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger"><i></i>Hapus</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i></i>Close</button>
                 </div>
             </form>
         </div>
@@ -346,6 +342,7 @@
 <style>
     .btn-custom {
         width: 60px;
+        margin: 2px;
     }
 
     @media (max-width: 768px) {

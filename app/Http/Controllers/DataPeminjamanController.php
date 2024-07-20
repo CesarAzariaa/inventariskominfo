@@ -15,7 +15,7 @@ class DataPeminjamanController extends Controller
     {
         $user = Auth::user();
 
-        $data_asets = Data_aset::with('kategori')->get();
+        $data_asets = Data_aset::with('kategori')->where('status', 'Tersedia')->get();
         $grouped_data_asets = $data_asets->groupBy('nama_aset');
 
         return view('data_peminjaman', compact('user', 'grouped_data_asets'));

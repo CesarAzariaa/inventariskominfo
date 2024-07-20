@@ -30,12 +30,6 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <!-- Tambahkan filter pencarian dan status -->
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <input type="text" id="searchInput" class="form-control" placeholder="Cari Nama Aset...">
-                                </div>
-                            </div>
                             <div class="table-responsive">
                                 <table id="add-row" class="display table table-striped table-hover" >
                                     <thead>

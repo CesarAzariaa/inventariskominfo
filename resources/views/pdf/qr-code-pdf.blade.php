@@ -1,72 +1,84 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="icon" href="assets/img/icon.ico" type="image/x-icon"/>
-    <title>QR Code PDF</title>
+    <title>QR Code Data Aset</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 100px;
+        .header {
+            background-color: #3498db;
+            color: white;
+            padding: 5px;
+            text-align: center;
+            font-size: 10px;
+            border-radius: 10px 10px 0 0;
         }
-        .card-container {
+
+        .container {
             display: flex;
             flex-wrap: wrap;
-            justify-content: flex-start;
+            justify-content: flex-start; /* Mengatur agar item mulai dari kiri */
         }
+
         .card {
-            border: 2px solid #000000;
+            border: 1px solid #ccc;
             border-radius: 10px;
             padding: 10px;
-            margin: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 18%; /* Sesuaikan width agar pas dua kartu per baris */
+            margin: 5px;
+            width: 120px;
+            height: 180px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
             display: flex;
-            align-items: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            flex: 0 0 auto; /* Menjaga ukuran tetap */
         }
-        .card img {
-            width: 100px;
-            height: 100px;
+
+        .card-content {
+            text-align: center;
+            margin-bottom: 10px;
         }
-        .card .content {
-            flex: 1;
-            margin-left: 10px;
-        }
+
         .card .qr-code {
-            margin-left: 10px;
+            text-align: center;
+        }
+
+        .card .qr-code img {
+            width: 70px;
+            height: 70px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .card .qr-code p {
+            margin-top: 5px;
+            color: #2980b9;
+            font-size: 10px;
+        }
+
+        h2 {
+            margin-top: 20px; /* Menambahkan margin atas */
         }
     </style>
 </head>
 <body>
-    <h1>Data Aset</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama Aset</th>
-                <th>Kategori</th>
-                <th>Merk</th>
-                <th>Model</th>
-                <th>Stok</th>
-                <th>QR Code</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php $no=1 @endphp
-            @foreach ($data_aset as $row)
-                <tr>
-                    <td>{{$no++}}</td>
-                    <td>{{$row->nama_aset}}</td>
-                    <td>{{$row->kategori->nama_kategori}}</td>
-                    <td>{{$row->merk}}</td>
-                    <td>{{$row->model}}</td>
-                    <td>{{$row->stok}}</td>
-                    <td>
-                        <img src="{{ asset('storage/qr_codes/' . $row->id . '.svg') }}" alt="QR Code" style="width: 50px; height: 50px;" />
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <h2>QR Code Data Aset</h2>
+    <div class="container">
+        @foreach ($expandedDataAsets as $row)
+            <div class="card">
+                <div class="card-content">
+                    <div class="header">Diskominfotik Bengkalis</div>
+                    <p>{{ $row->nama_aset }}</p>
+                </div>
+                <div class="qr-code">
+                    @if ($row->barcode && file_exists(storage_path('app/public/' . $row->barcode)))
+                        <img src="{{ public_path('storage/' . $row->barcode) }}" alt="QR Code" />
+                        <p>Scan untuk melihat detail produk</p> <!-- Mengubah teks -->
+                    @else
+                        <p>QR Code tidak ditemukan</p>
+                    @endif
+                </div>
+            </div>
+        @endforeach
+    </div>
 </body>
 </html>

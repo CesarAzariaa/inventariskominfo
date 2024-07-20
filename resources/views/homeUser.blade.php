@@ -82,7 +82,7 @@
 						<li class="nav-item active">
 							<a href="admin.home">
 								<i class="fas fa-home"></i>
-								<p>Dashboard</p>
+								<p>Dashboard User</p>
 							</a>
 						</li>
 						<li class="nav-section">
@@ -129,7 +129,7 @@
 			<div class="content">
 				<div class="page-inner">
 					<div class="page-header">
-						<h4 class="page-title">Dashboard</h4>
+						<h4 class="page-title">Dashboard User</h4>
 						<div class="btn-group btn-group-page-header ml-auto">
 						</div>
 					</div>
@@ -165,6 +165,7 @@
 										<div class="col col-stats ml-3 ml-sm-0">
 											<div class="numbers">
 												<p class="card-category">Peminjaman Aset</p>
+												<h4 class="card-title">{{ is_countable($peminjaman) ? count($peminjaman) : '0' }}</h4>
 											</div>
 										</div>
 									</div>

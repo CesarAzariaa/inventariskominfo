@@ -13,29 +13,23 @@
                         <div class="card-header">
                             <div class="d-flex align-items-center">
                                 <h4 class="card-title">Cetak Data Aset</h4>
+                                <div class="ml-auto">
+                                    <form id="cetak-form" action="{{ route('qr-code-pdf') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="selected_ids" id="selected-ids">
+                                        <button type="button" id="cetak-button" class="btn btn-danger">
+                                            <i class="fa fa-file"></i> Cetak PDF
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
-                            <form id="cetak-form" action="{{ route('qr-code-pdf') }}" method="GET">
-                                <div class="form-group">
-                                    <label for="filter-kategori">Pilih Kategori</label>
-                                    <select id="filter-kategori" name="kategori_id" class="form-control">
-                                        <option value="">Semua</option>
-                                        @foreach ($data_kategori as $kat)
-                                            <option value="{{ $kat->id }}">{{ $kat->nama_kategori }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group text-left">
-                                    <button type="button" id="cetak-button" class="btn btn-danger">
-                                        <i class="fa fa-file"></i> Cetak PDF
-                                    </button>
-                                </div>
-                            </form>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table id="add-row" class="display table table-striped table-hover">
                                     <thead>
                                         <tr>
+                                            <th><input type="checkbox" id="select-all-checkbox"></th>
                                             <th>No</th>
                                             <th>Nama Aset</th>
                                             <th>Kategori</th>
@@ -49,7 +43,8 @@
                                     <tbody>
                                         @php $no=1 @endphp
                                         @foreach ($data_aset as $row)
-                                            <tr class="aset-row" data-kategori="{{ $row->kategori->nama_kategori }}">
+                                            <tr>
+                                                <td><input type="checkbox" class="row-checkbox" name="aset_ids[]" value="{{ $row->id }}"></td>
                                                 <td>{{$no++}}</td>
                                                 <td>{{$row->nama_aset}}</td>
                                                 <td>{{$row->kategori->nama_kategori}}</td>
@@ -86,41 +81,28 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
-    document.getElementById('filter-kategori').addEventListener('change', function() {
-        var kategori = this.options[this.selectedIndex].text;
-        console.log("Kategori yang dipilih: ", kategori);
-        var rows = document.querySelectorAll('.aset-row');
-        var dataAvailable = false;
-        rows.forEach(function(row) {
-            var rowKategori = row.getAttribute('data-kategori');
-            console.log("Kategori pada baris: ", rowKategori);
-            if (kategori === "Semua" || rowKategori === kategori) {
-                row.style.display = "";
-                dataAvailable = true;
-            } else {
-                row.style.display = "none";
-            }
+    document.getElementById('select-all-checkbox').addEventListener('change', function() {
+        var isChecked = this.checked;
+        var checkboxes = document.querySelectorAll('.row-checkbox');
+        checkboxes.forEach(function(checkbox) {
+            checkbox.checked = isChecked;
         });
-        return dataAvailable;
     });
 
     document.getElementById('cetak-button').addEventListener('click', function() {
-        var kategori = document.getElementById('filter-kategori').options[document.getElementById('filter-kategori').selectedIndex].text;
-        var dataAvailable = false;
-        var rows = document.querySelectorAll('.aset-row');
-        rows.forEach(function(row) {
-            var rowKategori = row.getAttribute('data-kategori');
-            if (kategori === "Semua" || rowKategori === kategori) {
-                dataAvailable = true;
-            }
-        });
-        if (dataAvailable) {
+        var selectedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
+        if (selectedCheckboxes.length > 0) {
+            var selectedIds = [];
+            selectedCheckboxes.forEach(function(checkbox) {
+                selectedIds.push(checkbox.value);
+            });
+            document.getElementById('selected-ids').value = selectedIds.join(',');
             document.getElementById('cetak-form').submit();
         } else {
             Swal.fire({
                 icon: 'warning',
-                title: 'Data Tidak Tersedia',
-                text: 'Tidak ada data yang sesuai dengan filter yang dipilih.'
+                title: 'Tidak Ada Data Terpilih',
+                text: 'Silakan pilih setidaknya satu data untuk dicetak.'
             });
         }
     });

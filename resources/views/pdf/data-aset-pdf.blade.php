@@ -40,7 +40,7 @@
                     <td>{{ $row->merk }}</td>
                     <td>{{ $row->stok }} Pcs</td>
                     <td>{{ $row->status }}</td>
-                    <td>{{ $row->tanggal }}</td>
+                    <td>{{ \Carbon\Carbon::parse($row->tanggal)->translatedFormat('d M Y') }}</td>
                 </tr>
             @endforeach
         </tbody>

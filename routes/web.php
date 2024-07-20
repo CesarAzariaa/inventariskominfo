@@ -69,7 +69,7 @@ Route::post('/data-aset/pdf', [CetakAsetController::class, 'dataAsetPdf'])->name
 
 //Cetak Data Qr Code
 Route::get('/cetak-qr-code', [CetakQrController::class, 'cetak_qr'])->name('cetak-qr-code')->middleware('auth');
-Route::get('/qr-code-pdf', [CetakQrController::class, 'qrCodePdf'])->name('qr-code-pdf')->middleware('auth');
+Route::post('/qr-code-pdf', [CetakQrController::class, 'cetakPDF'])->name('qr-code-pdf')->middleware('auth');
 
 //Detail Qr Code
 Route::get('/data-aset/{id}', [DataAsetController::class, 'show'])->name('detail.data_aset');
